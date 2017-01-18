@@ -71,6 +71,7 @@ namespace SearchTool
             if (string.IsNullOrWhiteSpace(searchText))
             {
                 Console.WriteLine("Enter search text");
+
                 searchText = Console.ReadLine();
             }
 
