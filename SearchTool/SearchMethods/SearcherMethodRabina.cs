@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace SearchTool.SearchMethods
 {
-    public class SeatherMethod1 : ISearcherMethod
+    public class SearcherMethodRabina : ISearcherMethod
     {
         public List<SearchResult> Search(Data text, string searchText)
         {

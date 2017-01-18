@@ -1,5 +1,6 @@
 ﻿using SearchTool.Interfaces;
 using SearchTool.Models;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,10 +20,15 @@ namespace SearchTool
         private int _sizeBufferWritter;
 
 
-        public Searcher(IFileManager fManager, ISearcherMethod searcherMethod, string path, bool nesting, string searchText, int sizeBufferReader, int sizeBufferWritter)
+        public Searcher(IFileManager fManager, ISearcherMethod searcherMethod)
         {
             this._fileManager = fManager;
             this._searcherMethod = searcherMethod;
+            
+        }
+        
+        public void Initialize(string path, bool nesting, string searchText, int sizeBufferReader, int sizeBufferWritter)
+        {
             this._path = path;
             this._nesting = nesting;
             this._searchText = searchText;
@@ -65,10 +71,10 @@ namespace SearchTool
 
             foreach (SearchResult res in result)
             {
-                Console.WriteLine($" Result: {res.Position} path: {res.File.Path}");
+                Log.Information($" Result: {res.Position} path: {res.File.Path}");
+                //Console.WriteLine($" Result: {res.Position} path: {res.File.Path}");
             }
 
-            Console.Read();
 
         }
 
