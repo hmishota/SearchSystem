@@ -2,6 +2,7 @@
 using Microsoft.Practices.Unity;
 using NDesk.Options;
 using SearchTool.Interfaces;
+using SearchTool.SearchMethods;
 using System;
 using System.Collections.Generic;
 using System.Configuration;

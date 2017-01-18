@@ -3,7 +3,7 @@ using SearchTool.Models;
 using System;
 using System.Collections.Generic;
 
-namespace SearchTool
+namespace SearchTool.SearchMethods
 {
     public class SeatherMethod1 : ISearcherMethod
     {
