@@ -1,10 +1,8 @@
 ﻿using SearchTool.Interfaces;
+using SearchTool.Models;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using IO = System.IO;
 
 namespace SearchTool
 {
@@ -15,9 +13,9 @@ namespace SearchTool
             string[] arrayPath;
 
             if (nesting == true)
-                arrayPath = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
+                arrayPath = IO.Directory.GetFiles(path, "*.*", IO.SearchOption.AllDirectories);
             else
-                arrayPath = Directory.GetFiles(path, "*.*", SearchOption.TopDirectoryOnly);
+                arrayPath = IO.Directory.GetFiles(path, "*.*", IO.SearchOption.TopDirectoryOnly);
 
             List<File> list = new List<File>();
             foreach (var p in arrayPath)

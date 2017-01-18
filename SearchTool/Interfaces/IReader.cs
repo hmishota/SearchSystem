@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SearchTool.Models;
+using System;
 
 namespace SearchTool.Interfaces
 {

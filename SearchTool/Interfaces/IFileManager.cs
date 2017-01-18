@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SearchTool.Models;
+using System.Collections.Generic;
 
 namespace SearchTool.Interfaces
 {

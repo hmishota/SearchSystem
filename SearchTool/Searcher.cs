@@ -1,4 +1,5 @@
 ﻿using SearchTool.Interfaces;
+using SearchTool.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

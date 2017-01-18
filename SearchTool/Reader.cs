@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
 using SearchTool.Interfaces;
+using Models = SearchTool.Models;
 
 namespace SearchTool
 {
@@ -17,15 +18,15 @@ namespace SearchTool
         private int sizeBufferWritter;
         private int currentNumberRecordedElements = 0;
         private int numberTimesRead;
-        private File file;
+        private Models.File file;
 
-        public Reader(int sizeBufferReader, int sizeBufferWritter, File f)
+        public Reader(int sizeBufferReader, int sizeBufferWritter, Models.File f)
         {
             this.sizeBufferReader = sizeBufferReader;
             this.sizeBufferWritter = sizeBufferWritter;
             fileStream = new FileStream(f.Path, FileMode.Open);
             Initialize(fileStream, buffStream);
-            file = new File(f.Path);
+            file = new Models.File(f.Path);
         }
 
         public void Initialize(Stream fin, BufferedStream buffStream)
@@ -34,9 +35,9 @@ namespace SearchTool
                 currentNumberRecordedElements = 0;
         }
 
-        public bool Read(out Data dataOut)
+        public bool Read(out Models.Data dataOut)
         {
-            dataOut = new Data();
+            dataOut = new Models.Data();
             // Проверка на конец файла
             if (buffStream.Position == buffStream.Length)
                 return false;
