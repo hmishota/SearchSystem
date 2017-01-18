@@ -5,13 +5,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleApplication1
+namespace SearchTool
 {
     public class FileManager : IFileManager
     {
-        public IEnumerable<File> GetFiles(string path)
+        public IEnumerable<File> GetFiles(string path, bool nesting)
         {
-            string[] arrayPath = Directory.GetFiles(path,"*.*",SearchOption.AllDirectories);
+            string[] arrayPath;
+
+            if (nesting == true)
+                arrayPath = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
+            else
+                arrayPath = Directory.GetFiles(path, "*.*", SearchOption.TopDirectoryOnly);
 
             List<File> list = new List<File>();
             foreach (var p in arrayPath)

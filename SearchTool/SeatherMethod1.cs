@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleApplication1
+namespace SearchTool
 {
-    public class SeatherMethod1:ISearcher
+    public class SeatherMethod1:ISearcherMethod
     {
         public List<SearchResult> Search(Data text, string searchText)
         {
@@ -20,7 +20,7 @@ namespace ConsoleApplication1
             return searchResult;
         }
 
-        //Хеш-функция для алгоритма Рабина-Карпа
+        // Хеш-функция для алгоритма Рабина-Карпа
         public int Hash(string x)
         {
             int p = 31; 
@@ -31,26 +31,32 @@ namespace ConsoleApplication1
             }
             return rez;
         }
-        //Функция поиска алгоритмом Рабина-Карпа
-        public List<SearchResult> Rabina(Data searchText, string x)
+        // Функция поиска алгоритмом Рабина-Карпа
+        public List<SearchResult> Rabina(Data data, string searchText)
         {
             List<SearchResult> foundResults = new List<SearchResult>();
-            string s = searchText.Buffer;
-            if (x.Length > s.Length) return foundResults; 
-            int xhash = Hash(x);
-            int shash = Hash(s.Substring(0, x.Length)); 
+            string buffer = data.Buffer;
+            if (searchText.Length > buffer.Length) return foundResults; 
+
+            // Вычисление хэшкода искомого текста
+            int xhash = Hash(searchText);
+
+            // Вычисление хэшкода у буфера длинной равной размеру искомого текста
+            int shash = Hash(buffer.Substring(0, searchText.Length)); 
             bool flag;
             int j;
-            var count = s.Length - x.Length;
+            var count = buffer.Length - searchText.Length;
             for (int i = 0; i <= count; i++)
             {
+                // Сравнение хешкодов
                 if (xhash == shash)
                 {
                     flag = true;
                     j = 0;
-                    while ((flag == true) && (j < x.Length))
+                    while ((flag == true) && (j < searchText.Length))
                     {
-                        if (x[j] != s[i + j]) flag = false;
+                        // Усли хешкоды равны, проверяем посимвольно
+                        if (searchText[j] != buffer[i + j]) flag = false;
                         j++;
                     }
                     if (flag == true)
@@ -58,8 +64,9 @@ namespace ConsoleApplication1
                         foundResults.Add(new SearchResult { Position = i});
                     }
                 }
+                // Вычисление нового хешкода, вычитая хешкод первого символа в старом хешкоде и добавляя хешкод след. символа
                 if (i != count )
-                    shash = (shash - (int)Math.Pow(31, x.Length - 1) * (int)(s[i])) * 31 + (int)(s[i + x.Length]);
+                    shash = (shash - (int)Math.Pow(31, searchText.Length - 1) * (int)(buffer[i])) * 31 + (int)(buffer[i + searchText.Length]);
             }
             
             return foundResults;

@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleApplication1
+namespace SearchTool
 {
-    interface IFileManager
+    public interface IFileManager
     {
-        IEnumerable<File> GetFiles(string path);
+        IEnumerable<File> GetFiles(string path, bool nesting);
     }
     
 }

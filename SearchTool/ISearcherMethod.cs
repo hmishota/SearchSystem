@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleApplication1
+namespace SearchTool
 {
-    interface ISearcher
+    public interface ISearcherMethod
     {
         List<SearchResult> Search(Data searchText, string source);
     }
