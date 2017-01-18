@@ -1,6 +1,7 @@
 ﻿using Fclp;
 using Microsoft.Practices.Unity;
 using NDesk.Options;
+using SearchTool.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Configuration;

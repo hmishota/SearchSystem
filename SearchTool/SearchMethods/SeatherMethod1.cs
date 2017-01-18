@@ -1,12 +1,10 @@
-﻿using System;
+﻿using SearchTool.Interfaces;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SearchTool
 {
-    public class SeatherMethod1:ISearcherMethod
+    public class SeatherMethod1 : ISearcherMethod
     {
         public List<SearchResult> Search(Data text, string searchText)
         {
@@ -23,8 +21,8 @@ namespace SearchTool
         // Хеш-функция для алгоритма Рабина-Карпа
         public int Hash(string x)
         {
-            int p = 31; 
-            int rez = 0; 
+            int p = 31;
+            int rez = 0;
             for (int i = 0; i < x.Length; i++)
             {
                 rez += (int)Math.Pow(p, x.Length - 1 - i) * (int)(x[i]);
@@ -36,13 +34,13 @@ namespace SearchTool
         {
             List<SearchResult> foundResults = new List<SearchResult>();
             string buffer = data.Buffer;
-            if (searchText.Length > buffer.Length) return foundResults; 
+            if (searchText.Length > buffer.Length) return foundResults;
 
             // Вычисление хэшкода искомого текста
             int xhash = Hash(searchText);
 
             // Вычисление хэшкода у буфера длинной равной размеру искомого текста
-            int shash = Hash(buffer.Substring(0, searchText.Length)); 
+            int shash = Hash(buffer.Substring(0, searchText.Length));
             bool flag;
             int j;
             var count = buffer.Length - searchText.Length;
@@ -61,14 +59,14 @@ namespace SearchTool
                     }
                     if (flag == true)
                     {
-                        foundResults.Add(new SearchResult { Position = i});
+                        foundResults.Add(new SearchResult { Position = i });
                     }
                 }
                 // Вычисление нового хешкода, вычитая хешкод первого символа в старом хешкоде и добавляя хешкод след. символа
-                if (i != count )
+                if (i != count)
                     shash = (shash - (int)Math.Pow(31, searchText.Length - 1) * (int)(buffer[i])) * 31 + (int)(buffer[i + searchText.Length]);
             }
-            
+
             return foundResults;
         }
     }
