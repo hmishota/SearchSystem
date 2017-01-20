@@ -16,8 +16,7 @@ namespace SearchTool
 
     class Program
     {
-        public static int SizeBufferReader = Convert.ToInt16(ConfigurationManager.AppSettings["ReaderBufferSizeReader"]),
-            SizeBufferWritter = Convert.ToInt16(ConfigurationManager.AppSettings["ReaderBufferSizeWritter"]);
+        
 
         static void Main(string[] args)
         {
@@ -27,12 +26,22 @@ namespace SearchTool
 
             InitializationAdditions.Serilog();
             InitializationAdditions.InputVariables(args, ref path, ref nesting, ref searchText);
-            InitializationAdditions.DeterminationMinValue(ref SizeBufferReader, ref SizeBufferWritter);
             var unityContainer = InitializationAdditions.UnityContainer();
+            var searcher = unityContainer.Resolve<SearcherSimple>();
+           /* searcher.Initialize(unityContainer);
+            searcher.DeterminationMinValue();
+            searcher.Search(path, nesting, searchText).Wait();*/
 
-            var searcher = unityContainer.Resolve<Searcher>();
-            searcher.Initialize(path, nesting, searchText, SizeBufferReader, SizeBufferWritter);
-            searcher.Search();
+
+            var sear = unityContainer.Resolve<SearcherMultithreading>();
+            sear.Search(path, nesting, searchText);
+
+
+
+
+
+
+
 
             Console.Read();
 

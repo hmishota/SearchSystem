@@ -20,7 +20,12 @@ namespace SearchTool
         private int numberTimesRead;
         private Models.File file;
 
-        public Reader(int sizeBufferReader, int sizeBufferWritter, Models.File f)
+        public Reader()
+        {
+            
+        }
+
+        public void InitVariables(int sizeBufferReader, int sizeBufferWritter, Models.File f)
         {
             this.sizeBufferReader = sizeBufferReader;
             this.sizeBufferWritter = sizeBufferWritter;
@@ -35,12 +40,12 @@ namespace SearchTool
                 currentNumberRecordedElements = 0;
         }
 
-        public bool Read(out Models.Data dataOut)
+        public async Task<Models.Data> Read()
         {
-            dataOut = new Models.Data();
+            var dataOut = new Models.Data();
             // Проверка на конец файла
             if (buffStream.Position == buffStream.Length)
-                return false;
+                return null;
 
             numberTimesRead = sizeBufferWritter / sizeBufferReader;
 
@@ -53,17 +58,17 @@ namespace SearchTool
                 array = new byte[sizeBufferReader];
                 int n;
                 // Чтение из файла размерностью sizeBufferReader
-                n = buffStream.Read(array, 0, sizeBufferReader);
+                n = await buffStream.ReadAsync(array, 0, sizeBufferReader);
                 if (n == 0)
                 {
-                    return true;
+                    return dataOut;
                 }
 
                 // Преобразование массива байтов в строку и удаление последних нулей
                 dataOut.Buffer += System.Text.Encoding.Default.GetString(array).TrimEnd(new char[] { (char)0 });
                 currentNumberRecordedElements = currentNumberRecordedElements + sizeBufferReader;
             }
-            return true;
+            return dataOut;
         }
 
         public void Dispose()

@@ -2,9 +2,8 @@
 
 namespace SearchTool.Interfaces
 {
-    interface IBuffer
+    public interface IBufferInterceptor
     {
-        void Add(Data data);
-        Data Get();
+        void Intercept(Data data);
     }
 }

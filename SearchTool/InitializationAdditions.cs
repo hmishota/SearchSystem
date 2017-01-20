@@ -78,22 +78,26 @@ namespace SearchTool
             searchTextOut = searchText;
         }
 
-        public static void DeterminationMinValue(ref int _sizeBufferReader, ref int _sizeBufferWritter)
-        {
-            if (_sizeBufferReader > _sizeBufferWritter)
-            {
-                int buff = _sizeBufferWritter;
-                _sizeBufferWritter = _sizeBufferReader;
-
-                _sizeBufferReader = buff;
-            }
-        }
-
         public static IUnityContainer UnityContainer()
         {
             var unityContainer = new UnityContainer();
             unityContainer.RegisterType<IFileManager, FileManager>();
             unityContainer.RegisterType<ISearcherMethod, SearcherMethodRabina>();
+            unityContainer.RegisterType<IReader, Reader>();
+            unityContainer.RegisterInstance(new ConfigSettings());
+
+            return unityContainer;
+        }
+
+        public static IUnityContainer UnityContainerMulti()
+        {
+            var unityContainer = new UnityContainer();
+            unityContainer.RegisterType<IFileManager, FileManager>();
+            unityContainer.RegisterType<ISearcherMethod, SearcherMethodRabina>();
+            unityContainer.RegisterType<IReader, Reader>();
+            unityContainer.RegisterInstance(new ConfigSettings());
+            unityContainer.RegisterType<IBuffer, Buffer>();
+
 
             return unityContainer;
         }
