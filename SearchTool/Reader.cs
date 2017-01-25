@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using System.Threading.Tasks;
-using System.Configuration;
 using SearchTool.Interfaces;
-using Models = SearchTool.Models;
 
 namespace SearchTool
 {
@@ -19,11 +13,6 @@ namespace SearchTool
         private int currentNumberRecordedElements = 0;
         private int numberTimesRead;
         private Models.File file;
-
-        public Reader()
-        {
-            
-        }
 
         public void InitVariables(int sizeBufferReader, int sizeBufferWritter, Models.File f)
         {
@@ -40,7 +29,7 @@ namespace SearchTool
                 currentNumberRecordedElements = 0;
         }
 
-        public async Task<Models.Data> Read()
+        public async Task<Models.Data> Read()//TODO: async
         {
             var dataOut = new Models.Data();
             // Проверка на конец файла

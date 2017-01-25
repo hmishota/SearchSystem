@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SearchTool
 {
-    class MultitaskingSearcher
+    class Example
     {
         public void t(int id)
         {
@@ -16,11 +16,7 @@ namespace SearchTool
             var task = GetT(null, c.Token);
 
             c.Cancel();
-
-
             
-
-
 
             try
             {

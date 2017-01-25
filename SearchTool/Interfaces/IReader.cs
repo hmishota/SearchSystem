@@ -8,6 +8,5 @@ namespace SearchTool.Interfaces
     {
         Task<Models.Data> Read();
         void InitVariables(int sizeBufferReader, int sizeBufferWritter, Models.File f);
-
     }
 }

@@ -5,25 +5,16 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SearchTool
 {
-    public class SearcherSimple
+    public class SearcherSimple: IStartSearher
     {
         private IFileManager _fileManager;
         private ISearcherMethod _searcherMethod;
         private IUnityContainer _unityContainer;
-        //private IUnityContainer _unityContainerConfig;
-
-        //private string _path;
-        //private bool _nesting;
-        //private string _searchText;
-        //private int _sizeBufferReader;
-        //private int _sizeBufferWritter;
-
+       
         public static int SizeBufferReader = Convert.ToInt16(ConfigurationManager.AppSettings["ReaderBufferSizeReader"]),
             SizeBufferWritter = Convert.ToInt16(ConfigurationManager.AppSettings["ReaderBufferSizeWritter"]);
 
@@ -47,17 +38,16 @@ namespace SearchTool
 
         public void Initialize(IUnityContainer unityContainer)
         {
-            //this._path = path;
-            //this._nesting = nesting;
-            //this._searchText = searchText;
             var configSetting = unityContainer.Resolve<ConfigSettings>();
 
             configSetting.SizeBufferReader = SizeBufferReader;
             configSetting.SizeBufferWritter = SizeBufferWritter;
-
-            //this._sizeBufferReader = configSetting.SizeBufferReader;
-            //this._sizeBufferWritter = configSetting.SizeBufferWritter;
         }
+
+        //public void UnityContainer()
+        //{
+        //    InitializationAdditions.UnityContainer();
+        //}
 
         public async Task Search(string path, bool nesting, string searchText)
         {
@@ -98,7 +88,6 @@ namespace SearchTool
                 Log.Information($" Result: {res.Position} path: {res.File.Path}");
                 //Console.WriteLine($" Result: {res.Position} path: {res.File.Path}");
             }
-
 
         }
 

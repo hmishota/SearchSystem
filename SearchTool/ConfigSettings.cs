@@ -1,5 +1,4 @@
-﻿using SearchTool.Interfaces;
-namespace SearchTool
+﻿namespace SearchTool
 {
     public class ConfigSettings
     {
