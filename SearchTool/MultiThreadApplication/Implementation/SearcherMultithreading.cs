@@ -3,6 +3,7 @@ using SearchTool.Interfaces;
 using SearchTool.Models;
 using Serilog;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Threading;
@@ -60,21 +61,24 @@ namespace SearchTool
             buffer.RegisterInterceptor(new BufferInterceptor(searchText));
 
             var searcher = _unityContainer.Resolve<ISearcherMethodDecorator>();
-
-            foreach (var file in files)
             {
-                tasks.Add(Task.Run(() => reader.Read(file, SizeBufferReader, SizeBufferWritter)));
-            }
+                foreach (var file in files)
+                {
+                    tasks.Add(Task.Run(() => reader.ReadAsync(file, SizeBufferReader, SizeBufferWritter)));
+                }
+                
+                var searchTask = Task.Run(() => searcher.SearchAsync(searchText, token.Token));
+                await Task.WhenAll(tasks);
+                buffer.CompleteAdd();
 
-            var searchTask = Task.Run(() => searcher.Search(searchText, token.Token));
-            await Task.WhenAll(tasks);
+                token.Cancel();
 
-            token.Cancel();
-            var result = await searchTask;
+                var result = await searchTask;
 
-            foreach (SearchResult res in result)
-            {
-                Log.Information($" Result: {res.Position} path: {res.File.Path}");
+                foreach (SearchResult res in result)
+                {
+                    Log.Information($" Result: {res.Position} path: {res.File.Path}");
+                }
             }
 
         }

@@ -1,6 +1,7 @@
 ﻿using SearchTool.Interfaces;
 using SearchTool.Models;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,13 +11,13 @@ namespace SearchTool
 {
     public class BufferInterceptor : IBufferInterceptor
     {
-        Dictionary<string, Data> storage;
+        ConcurrentDictionary<string, Data> storage;
         private int _searchTextLength;
 
         public BufferInterceptor(string source)
         {
             _searchTextLength = source.Length;
-            storage = new Dictionary<string, Data>();
+            storage = new ConcurrentDictionary<string, Data>();
         }
 
         public void Intercept(Data data)

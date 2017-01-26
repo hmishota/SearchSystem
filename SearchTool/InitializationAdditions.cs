@@ -142,9 +142,8 @@ namespace SearchTool
             var read = new ReadWithCounts();
             unityContainer.RegisterType<IReaderMulti, ThreadSafeReader>(new ContainerControlledLifetimeManager(),new InjectionConstructor(read));
             unityContainer.RegisterInstance<IReadCounter>(read);
-            var buffer = new BufferWithCounts();
-            unityContainer.RegisterType<IBuffer, ThreadSafeBuffer>(new ContainerControlledLifetimeManager(), new InjectionConstructor(buffer));
-            unityContainer.RegisterInstance<IBufferCounter>(buffer);
+            //var buffer = new BufferWithCounts();
+            unityContainer.RegisterType<IBuffer, Buffer>(new ContainerControlledLifetimeManager());
             unityContainer.RegisterType<ISearcherMethodDecorator, SearcherMethodDecorator>();
 
             return unityContainer;

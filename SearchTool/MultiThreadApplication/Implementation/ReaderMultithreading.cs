@@ -5,6 +5,7 @@ using Microsoft.Practices.Unity;
 using System.Threading;
 using System.Diagnostics;
 using System;
+using System.Collections.Concurrent;
 
 namespace SearchTool
 {
@@ -17,9 +18,9 @@ namespace SearchTool
             _readerMulti = readerMulti;
         }
 
-        public Task Read(File file, int sizeBufferReader, int sizeBufferWritter)
+        public Task ReadAsync(File file, int sizeBufferReader, int sizeBufferWritter)
         {
-            return _readerMulti.Read(file, sizeBufferReader, sizeBufferWritter);
+            return _readerMulti.ReadAsync(file, sizeBufferReader, sizeBufferWritter);
         }
 
         public void RegisterReadWithCounts(IUnityContainer unityContainer)
@@ -55,10 +56,10 @@ namespace SearchTool
             return watchAndCount;
         }
 
-        public Task Read(File file, int sizeBufferReader, int sizeBufferWritter)
+        public Task ReadAsync(File file, int sizeBufferReader, int sizeBufferWritter)
         {
             _getStopWatch.Start();
-            var taskRead = _readerMultithreading.Read(file, sizeBufferReader, sizeBufferWritter);
+            var taskRead = _readerMultithreading.ReadAsync(file, sizeBufferReader, sizeBufferWritter);
             _getStopWatch.Stop();
 
             Interlocked.Increment(ref _getExecutingNumber);
@@ -76,19 +77,21 @@ namespace SearchTool
             _unityContainer = unityContainer;
         }
 
-        public async Task Read(Models.File file, int sizeBufferReader, int sizeBufferWritter)
+        public async Task ReadAsync(Models.File file, int sizeBufferReader, int sizeBufferWritter)
         {
-            Data data;
+            //BlockingCollection<Data> bc = new BlockingCollection<Data>();
+            Data data = new Data();
             var buffer = _unityContainer.Resolve<IBuffer>();
             using (var reader = _unityContainer.Resolve<IReader>())
             {
                 reader.InitVariables(sizeBufferReader, sizeBufferWritter, file);
-                while ((data = await reader.Read()) != null)
+                while ((data = await reader.ReadAsync()) != null)
                 {
                     buffer.Add(data);
                 }
+                
+
             }
         }
-        
     }
 }

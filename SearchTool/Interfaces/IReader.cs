@@ -6,7 +6,7 @@ namespace SearchTool.Interfaces
 {
     interface IReader : IDisposable
     {
-        Task<Models.Data> Read();
+        Task<Models.Data> ReadAsync();
         void InitVariables(int sizeBufferReader, int sizeBufferWritter, Models.File f);
     }
 }

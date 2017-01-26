@@ -62,7 +62,7 @@ namespace SearchTool
                 using (var reader =  _unityContainer.Resolve<IReader>())
                 {
                     reader.InitVariables(SizeBufferReader, SizeBufferWritter, file);
-                    while ((data = await reader.Read()) != null)
+                    while ((data = await reader.ReadAsync()) != null)
                     {
                         if (prevData != null)
                         {

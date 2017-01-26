@@ -17,36 +17,41 @@ namespace SearchTool
         WatchAndCount ReaderGetCount(string key, WatchAndCount watchAndCount);
     }
 
-    public class ThreadSafeBuffer : IBuffer
-    {
-        IBuffer _buffer;
+    //public class ThreadSafeBuffer : IBuffer
+    //{
+    //    IBuffer _buffer;
 
-        public ThreadSafeBuffer(IBuffer buffer)
-        {
-            _buffer = buffer;
-        }
+    //    public ThreadSafeBuffer(IBuffer buffer)
+    //    {
+    //        _buffer = buffer;
+    //    }
 
-        public void RegisterInterceptor(IBufferInterceptor interceptor)
-        {
-            _buffer.RegisterInterceptor(interceptor);
-        }
+    //    public void RegisterInterceptor(IBufferInterceptor interceptor)
+    //    {
+    //        _buffer.RegisterInterceptor(interceptor);
+    //    }
 
-        public void Add(Data data)
-        {
-            _buffer.Add(data);
-        }
+    //    public void Add(Data data)
+    //    {
+    //        _buffer.Add(data);
+    //    }
 
-        public Data Get()
-        {
-            Data data = _buffer.Get();
-            return data;
-        }
-    }
+    //    public Data Get()
+    //    {
+    //        Data data = _buffer.Get();
+    //        return data;
+    //    }
 
-    public interface IBufferCounter
-    {
-        WatchAndCount GetCount(string key, WatchAndCount watchAndCount);
-    }
+    //    public void CompleteAdd()
+    //    {
+    //        _buffer.CompleteAdd();
+    //    }
+    //}
+
+    //public interface IBufferCounter
+    //{
+    //    WatchAndCount GetCount(string key, WatchAndCount watchAndCount);
+    //}
 
     public class WatchAndCount
     {
@@ -58,59 +63,64 @@ namespace SearchTool
 
     }
 
-    public class BufferWithCounts: IBuffer, IBufferCounter
-    {
-        private Buffer _buffer;
-        private Stopwatch _getStopWatch;
-        private int _getExecutingNumber = 0;
+    //public class BufferWithCounts : IBuffer, IBufferCounter
+    //{
+    //    private Buffer _buffer;
+    //    private Stopwatch _getStopWatch;
+    //    private int _getExecutingNumber = 0;
 
-        public BufferWithCounts()
-        {
-            _buffer = new Buffer();
-            _getStopWatch = new Stopwatch();
-        }
+    //    public BufferWithCounts()
+    //    {
+    //        _buffer = new Buffer();
+    //        _getStopWatch = new Stopwatch();
+    //    }
 
-        public void RegisterInterceptor(IBufferInterceptor interceptor)
-        {
-            _buffer.RegisterInterceptor(interceptor);
-        }
+    //    public void RegisterInterceptor(IBufferInterceptor interceptor)
+    //    {
+    //        _buffer.RegisterInterceptor(interceptor);
+    //    }
 
-        public void Add(Data data)
-        {
-            _buffer.Add(data);
-        }
+    //    public void Add(Data data)
+    //    {
+    //        _buffer.Add(data);
+    //    }
 
-        public Data Get()
-        {
-            _getStopWatch.Start();
-            Data res = _buffer.Get();
-            _getStopWatch.Stop();
+    //    public Data Get()
+    //    {
+    //        _getStopWatch.Start();
+    //        Data res = _buffer.Get();
+    //        _getStopWatch.Stop();
 
-            Interlocked.Increment(ref _getExecutingNumber);
+    //        Interlocked.Increment(ref _getExecutingNumber);
 
-            //Interlocked.MemoryBarrier();//прочитать
+    //        //Interlocked.MemoryBarrier();//прочитать
 
-            //Interlocked.MemoryBarrier();
-            return res;
-        }
+    //        //Interlocked.MemoryBarrier();
+    //        return res;
+    //    }
 
-        public WatchAndCount GetCount(string key, WatchAndCount watchAndCount)
-        {
-            WatchAndCount res = new WatchAndCount();
-            if (key == "Buffer.Get")
-            {
-                res.GetExecuteTimeBuffer = _getStopWatch.ElapsedMilliseconds;
-                res.GetExecutingNumberBuffer = _getExecutingNumber;
-            }
+    //    public WatchAndCount GetCount(string key, WatchAndCount watchAndCount)
+    //    {
+    //        WatchAndCount res = new WatchAndCount();
+    //        if (key == "Buffer.Get")
+    //        {
+    //            res.GetExecuteTimeBuffer = _getStopWatch.ElapsedMilliseconds;
+    //            res.GetExecutingNumberBuffer = _getExecutingNumber;
+    //        }
 
-            return res;
-        }
-    }
+    //        return res;
+    //    }
+
+    //    public void CompleteAdd()
+    //    {
+    //        _buffer.CompleteAdd();
+    //    }
+    //}
 
 
     public class Buffer : IBuffer
     {
-        private Queue<Data> listData = new Queue<Data>();
+        public BlockingCollection<Data> listData = new BlockingCollection<Data>();
         private SemaphoreSlim ss = new SemaphoreSlim(1);
 
         private IBufferInterceptor _interceptor;
@@ -122,28 +132,48 @@ namespace SearchTool
 
         public void Add(Data data)
         {
-            ss.Wait();
+            //ss.Wait();
 
             if (_interceptor != null)
                 _interceptor.Intercept(data);
 
-            listData.Enqueue(data);
+            listData.Add(data);
 
-            ss.Release();
+            // ss.Release();
         }
 
         public Data Get()
         {
-            if (listData.Count != 0)
+            Data data;
+            //if (listData.Count != 0)
+            //{
+            //    ss.Wait();
+            //    Data data = null;
+            //    if (listData.Count != 0)
+            //        data = listData.Dequeue();
+            //    ss.Release();
+            //    return data;
+            //}
+            try
             {
-                ss.Wait();
-                Data data = null;
-                if (listData.Count != 0)
-                    data = listData.Dequeue();
-                ss.Release();
-                return data;
+                data = listData.Take();
             }
-            return null;
+            catch (InvalidOperationException)
+            {
+                Console.WriteLine("That's All!");
+                data = null;
+            }
+            return data;
+        }
+
+        public IEnumerable<Data> GetEnumerable()
+        {
+            return listData.GetConsumingEnumerable();
+        }
+
+        public void CompleteAdd()
+        {
+            listData.CompleteAdding();
         }
     }
 

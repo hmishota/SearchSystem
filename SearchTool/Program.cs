@@ -51,14 +51,14 @@ namespace SearchTool
 
             Console.WriteLine(stop.ElapsedMilliseconds);
 
-            var buffWatch = unityContainer.Resolve<IBufferCounter>();  
-            var watchAndCount = unityContainer.Resolve<WatchAndCount>();
-            var res = buffWatch.GetCount("Buffer.Get", watchAndCount);
+//            var buffWatch = unityContainer.Resolve<IBufferCounter>();  
+            //var watchAndCount = unityContainer.Resolve<WatchAndCount>();
+            //var res = buffWatch.GetCount("Buffer.Get", watchAndCount);
 
-            var readWatch = unityContainer.Resolve<IReadCounter>();
-            res = readWatch.ReaderGetCount("Buffer.Get", res);
+            //var readWatch = unityContainer.Resolve<IReadCounter>();
+            //res = readWatch.ReaderGetCount("Buffer.Get", res);
 
-            Console.WriteLine($"TimeBuffer = {res.GetExecuteTimeBuffer}; CountBuffer = {res.GetExecutingNumberBuffer}; TimeRead = {res.GetExecuteTimeRead}; CountRead = {res.GetExecutingNumberRead};");
+            //Console.WriteLine($"TimeBuffer = {res.GetExecuteTimeBuffer}; CountBuffer = {res.GetExecutingNumberBuffer}; TimeRead = {res.GetExecuteTimeRead}; CountRead = {res.GetExecutingNumberRead};");
 
 
 

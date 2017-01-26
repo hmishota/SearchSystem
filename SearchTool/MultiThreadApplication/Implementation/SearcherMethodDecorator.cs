@@ -7,6 +7,7 @@ using SearchTool.Models;
 using System.Linq;
 using System;
 using System.Configuration;
+using System.Collections.Concurrent;
 
 namespace SearchTool
 {
@@ -21,39 +22,54 @@ namespace SearchTool
             _container = container;
         }
 
-        public async Task<List<SearchResult>> Search(string source, CancellationToken cancel)
+        public async Task<List<SearchResult>> SearchAsync(string source, CancellationToken cancel)
         {
             var tasks = new List<Task<List<SearchResult>>>();
 
-            for (int i = 0; i < SearchThreadsNumber; i++)
-            {
-                tasks.Add(Task.Run( async () => await SearchInternal(source, cancel)));
-            }
-
+           
+                for (int i = 0; i < SearchThreadsNumber; i++)
+                {
+                    tasks.Add(Task.Run(async () => await SearchInternalAsync(source, cancel)));
+                }
+            
             var results = await Task.WhenAll(tasks);
 
             return results.SelectMany(x => x).ToList();
         }
 
-        private async Task<List<SearchResult>> SearchInternal(string source, CancellationToken cancel)
+        private Task<List<SearchResult>> SearchInternalAsync(string source, CancellationToken cancel)
         {
-            List<SearchResult> result = new List<SearchResult>();
             var buffer = _container.Resolve<IBuffer>();
             var method = _container.Resolve<ISearcherMethod>();
 
-            while (true)
+            return Task.Run(() =>
             {
-                var data = buffer.Get();
-                if (data == null)
+                List<SearchResult> result = new List<SearchResult>();
+
+                foreach (var data in buffer.GetEnumerable())
                 {
-                    if (cancel.IsCancellationRequested)
-                        return result;
-                    else
-                        await Task.Delay(10);
-                }
-                else
                     result.AddRange(method.Search(data, source));
-            }
+                }
+
+                return result;
+            });
+
+            //Task.WaitAll(t1, t2);
+
+
+            //while (true)
+            //{
+            //    var data = buffer.Get();
+            //    if (data == null)
+            //    {
+            //        if (cancel.IsCancellationRequested)
+            //            return result;
+            //        else
+            //            await Task.Delay(10);
+            //    }
+            //    else
+            //        result.AddRange(method.Search(data, source));
+            //}
         }
 
     }

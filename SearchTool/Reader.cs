@@ -29,7 +29,7 @@ namespace SearchTool
                 currentNumberRecordedElements = 0;
         }
 
-        public async Task<Models.Data> Read()//TODO: async
+        public async Task<Models.Data> ReadAsync()
         {
             var dataOut = new Models.Data();
             // Проверка на конец файла
