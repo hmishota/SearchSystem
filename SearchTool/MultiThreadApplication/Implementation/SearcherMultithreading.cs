@@ -3,7 +3,6 @@ using SearchTool.Interfaces;
 using SearchTool.Models;
 using Serilog;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
@@ -21,13 +20,11 @@ namespace SearchTool
         public static int SizeBufferReader = Convert.ToInt16(ConfigurationManager.AppSettings["ReaderBufferSizeReader"]),
             SizeBufferWritter = Convert.ToInt16(ConfigurationManager.AppSettings["ReaderBufferSizeWritter"]);
 
-
         public SearcherMultithreading(IFileManager fManager, ISearcherMethod searcherMethod, IUnityContainer unityContainer)
         {
             _fileManager = fManager;
             _searcherMethod = searcherMethod;
             _unityContainer = unityContainer;
-
         }
 
         public void Initialize(IUnityContainer unityContainer)
@@ -67,11 +64,13 @@ namespace SearchTool
 
             foreach (var file in files)
             {
+                // Запускает чтение файла в отдельном потоке
                 tasks.Add(Task.Run(() => reader.ReadAsync(file, SizeBufferReader, SizeBufferWritter)));
             }
 
             var watchAndCount = _unityContainer.Resolve<WatchAndCount>();
 
+            // Запускает поиск
             var searchTask = Task.Run(() => searcher.SearchAsync(searchText, token.Token));
 
             await Task.WhenAll(tasks);

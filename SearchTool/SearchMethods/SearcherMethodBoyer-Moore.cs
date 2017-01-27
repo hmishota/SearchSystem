@@ -6,7 +6,6 @@ namespace SearchTool.SearchMethods
 {
     public class SearcherMethodBoyer_Moore : ISearcherMethod
     {
-
         public char[] SymbolOfX; //Таблица символов искомой строки  
         public int[] ValueShift; //Таблица смещений для символов
 
@@ -56,7 +55,7 @@ namespace SearchTool.SearchMethods
             string s = data.Buffer;
             bool has, have; //Флаги
             int l, j, i; //Счетчики
-            ShiftBM(x); //Вызов процедуры, формирубщей таблицу смещений
+            ShiftBM(x); //Вызов процедуры, формирующей таблицу смещений
             if (x.Length > s.Length) return foundResults;
             //Основной цикл по исходной строке
             for (i = 0; i < s.Length - x.Length + 1; i++)

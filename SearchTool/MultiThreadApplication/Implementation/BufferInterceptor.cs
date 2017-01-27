@@ -1,11 +1,6 @@
 ﻿using SearchTool.Interfaces;
 using SearchTool.Models;
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SearchTool
 {
@@ -20,17 +15,22 @@ namespace SearchTool
             storage = new ConcurrentDictionary<string, Data>();
         }
 
+        // Добавление с предыдущего шага символов на n-1 длины искомого слова
         public void Intercept(Data data)
         {
+            // Проверяется содержится ли в словаре такой путь
             if (storage.ContainsKey(data.Path))
             {
                 var prevData = storage[data.Path];
                 string str;
+
+                // Если длина слова меньше размера буфера
                 if (_searchTextLength < prevData.Buffer.Length)
                 {
                     str = prevData.Buffer.Substring(prevData.Buffer.Length - (_searchTextLength - 1));
                     data.Position = data.Position - (_searchTextLength - 1);
                 }
+                // Иначе просто присвоить весь буфер строке
                 else
                 {
                     str = prevData.Buffer;

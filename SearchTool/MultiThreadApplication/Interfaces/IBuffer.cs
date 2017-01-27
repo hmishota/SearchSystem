@@ -1,6 +1,4 @@
-﻿using Microsoft.Practices.Unity;
-using SearchTool.Models;
-using System.Collections.Concurrent;
+﻿using SearchTool.Models;
 using System.Collections.Generic;
 
 namespace SearchTool.Interfaces
@@ -10,7 +8,6 @@ namespace SearchTool.Interfaces
         void CompleteAdd();
         void RegisterInterceptor(IBufferInterceptor intrceptor);
         void Add(Data data);
-        //Data Get();
         IEnumerable<Data> GetEnumerable();
     }
 }

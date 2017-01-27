@@ -12,76 +12,25 @@ using System.Diagnostics;
 
 namespace SearchTool
 {
-    public interface ISearchCounter
-    {
-        void SeacherAddTime();
-    }
-
-    //public class SeachWithCounts : ISearcherMethodDecorator, ISearchCounter
-    //{
-    //    private SearcherMethodDecorator _search;
-
-    //    public SeachWithCounts(IUnityContainer container)
-    //    {
-    //        _search = new SearcherMethodDecorator(container);
-    //        _getStopWatch = new Stopwatch();
-    //    }
-
-    //    //public void SearcherMethodInit(IUnityContainer container)
-    //    //{
-    //    //    _search.SearcherMethodInit(container);
-    //    //}
-
-    //    //public void InitTimer()
-    //    //{
-    //    //    _getStopWatch = new Stopwatch();
-    //    //}
-
-    //    public Task<List<SearchResult>> SearchAsync(string source, CancellationToken cancel)
-    //    {
-    //        return _search.SearchAsync(source, cancel);
-    //    }
-
-    //    public void SeacherAddTime()
-    //    {
-    //        ResultTime.queryListSearch.Enqueue(_getStopWatch.ElapsedMilliseconds);
-    //    }
-
-    //    public async Task<List<SearchResult>> SearchInternalAsync(string source, CancellationToken cancel)
-    //    {
-    //        _getStopWatch.Start();
-    //        var searcher = await _search.SearchInternalAsync(source, cancel);
-    //        _getStopWatch.Stop();
-    //        SeacherAddTime();
-    //        return searcher;
-    //    }
-    //}
-
     public class SearcherMethodDecorator : ISearcherMethodDecorator
     {
         private IUnityContainer _container;
         private static int SearchThreadsNumber = Convert.ToInt32(ConfigurationManager.AppSettings["CountThreading"]);
 
-
         public SearcherMethodDecorator(IUnityContainer container)
         {
             _container = container;
         }
-
-        //public void SearcherMethodInit(IUnityContainer container)
-        //{
-        //    _container = container;
-        //}
+        
         public async Task<List<SearchResult>> SearchAsync(string source, CancellationToken cancel)
         {
-
             var totalRunTimeSearch = Stopwatch.StartNew();
 
             var tasks = new List<Task<List<SearchResult>>>();
 
             for (int i = 0; i < SearchThreadsNumber; i++)
             {
-
+                // Запускает поиск в отдельном потоке
                 tasks.Add(Task.Run(async () =>
                 {
                     Stopwatch getStopWatch = new Stopwatch();
@@ -103,6 +52,7 @@ namespace SearchTool
             return results.SelectMany(x => x).ToList();
         }
 
+        // Поиск source в data
         public async Task<List<SearchResult>> SearchInternalAsync(string source, CancellationToken cancel)
         {
             var buffer = _container.Resolve<IBuffer>();

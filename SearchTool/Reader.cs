@@ -1,26 +1,11 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using SearchTool.Interfaces;
 using SearchTool.Models;
 using System.Diagnostics;
-using System.Collections.Concurrent;
 
 namespace SearchTool
 {
-
-    public static class ResultTime
-    {
-        public static ConcurrentQueue<long> queryListRead;
-        public static ConcurrentQueue<long> queryListSearch;
-
-        static ResultTime()
-        {
-            queryListRead = new ConcurrentQueue<long>();
-            queryListSearch = new ConcurrentQueue<long>();
-        }
-    }
-
     public class ThreadSafeReader : IReader
     {
         IReader _reader;

@@ -20,8 +20,8 @@ namespace SearchTool
 
         public SearcherSimple(IFileManager fManager, ISearcherMethod searcherMethod, IUnityContainer unityContainer)
         {
-            this._fileManager = fManager;
-            this._searcherMethod = searcherMethod;
+            _fileManager = fManager;
+            _searcherMethod = searcherMethod;
             _unityContainer = unityContainer;
         }
 
@@ -43,11 +43,6 @@ namespace SearchTool
             configSetting.SizeBufferReader = SizeBufferReader;
             configSetting.SizeBufferWritter = SizeBufferWritter;
         }
-
-        //public void UnityContainer()
-        //{
-        //    InitializationAdditions.UnityContainer();
-        //}
 
         public async Task Search(string path, bool nesting, string searchText)
         {

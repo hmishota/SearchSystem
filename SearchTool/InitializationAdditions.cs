@@ -1,6 +1,7 @@
 ﻿using Microsoft.Practices.Unity;
 using NDesk.Options;
 using SearchTool.Interfaces;
+using SearchTool.Models;
 using SearchTool.SearchMethods;
 using Serilog;
 using Serilog.Events;
@@ -128,13 +129,9 @@ namespace SearchTool
 
         }
         
-        public static IUnityContainer UnityContainerMulti(IUnityContainer unityContainer) // СПРОСИТЬ
+        public static IUnityContainer UnityContainerMulti(IUnityContainer unityContainer)
         {
-            //unityContainer.RegisterType<IReaderMulti, ReaderMultithreading>();.
-            //var read = new ReadWithCounts();
             unityContainer.RegisterType<IReaderMulti, ReaderMultithreading>(new ContainerControlledLifetimeManager());
-            //unityContainer.RegisterInstance<IReadCounter>(read);
-            //var buffer = new BufferWithCounts();
             unityContainer.RegisterType<IBuffer, Buffer>(new ContainerControlledLifetimeManager());
             unityContainer.RegisterType<ISearcherMethodDecorator, SearcherMethodDecorator>();
 

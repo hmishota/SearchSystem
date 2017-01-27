@@ -1,9 +1,5 @@
 ﻿using Microsoft.Practices.Unity;
 using SearchTool.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SearchTool
@@ -11,7 +7,6 @@ namespace SearchTool
     public class SearcherStart
     {
         private IStartSearher _iStartSearher;
-
 
         public void SearcherStartInit(IStartSearher IStartSearher)
         {

@@ -89,6 +89,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interfaces\IStartSearher.cs" />
+    <Compile Include="Models\ResultTime.cs" />
+    <Compile Include="Models\WatchAndCount.cs" />
     <Compile Include="MultiThreadApplication\Implementation\Buffer.cs" />
     <Compile Include="MultiThreadApplication\Implementation\BufferInterceptor.cs" />
     <Compile Include="ConfigSettings.cs" />
