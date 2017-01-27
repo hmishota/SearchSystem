@@ -79,8 +79,12 @@ namespace SearchTool
         {
             var unityContainer = new UnityContainer();
             unityContainer.RegisterType<IFileManager, FileManager>();
-            unityContainer.RegisterType<IReader, Reader>();
+
+            unityContainer.RegisterType<IReader, ReadWithCounts>("ReadWithCounts");
+            unityContainer.RegisterType<IReader, ThreadSafeReader>(new InjectionConstructor(new ResolvedParameter(typeof(IReader), "ReadWithCounts")));
+
             unityContainer.RegisterInstance(new ConfigSettings());
+
             unityContainer.RegisterInstance(new SearcherStart());
             unityContainer.RegisterInstance(new WatchAndCount());
             int thread = Convert.ToInt32(ConfigurationManager.AppSettings["SearcherThreading"]);
@@ -89,7 +93,6 @@ namespace SearchTool
                 case 0:
                     Console.WriteLine("Single Threading");
                     unityContainer.RegisterType<IStartSearher, SearcherSimple>();
-
 
                     break;
 
@@ -124,24 +127,13 @@ namespace SearchTool
             return unityContainer;
 
         }
-
-        //public static IUnityContainer UnityContainer1()
-        //{
-        //    //var unityContainer = new UnityContainer();
-        //    //unityContainer.RegisterType<IFileManager, FileManager>();
-        //    //unityContainer.RegisterType<IReader, Reader>();
-        //    //unityContainer.RegisterInstance(new ConfigSettings());
-        //    //unityContainer.RegisterInstance(new SearcherStart());
-            
-        //    //return unityContainer;
-        //}
-
+        
         public static IUnityContainer UnityContainerMulti(IUnityContainer unityContainer) // СПРОСИТЬ
         {
             //unityContainer.RegisterType<IReaderMulti, ReaderMultithreading>();.
-            var read = new ReadWithCounts();
-            unityContainer.RegisterType<IReaderMulti, ThreadSafeReader>(new ContainerControlledLifetimeManager(),new InjectionConstructor(read));
-            unityContainer.RegisterInstance<IReadCounter>(read);
+            //var read = new ReadWithCounts();
+            unityContainer.RegisterType<IReaderMulti, ReaderMultithreading>(new ContainerControlledLifetimeManager());
+            //unityContainer.RegisterInstance<IReadCounter>(read);
             //var buffer = new BufferWithCounts();
             unityContainer.RegisterType<IBuffer, Buffer>(new ContainerControlledLifetimeManager());
             unityContainer.RegisterType<ISearcherMethodDecorator, SearcherMethodDecorator>();

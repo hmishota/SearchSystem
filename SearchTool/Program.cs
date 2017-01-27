@@ -28,39 +28,32 @@ namespace SearchTool
             InitializationAdditions.Serilog();
             InitializationAdditions.InputVariables(args, ref path, ref nesting, ref searchText);
 
-           
             var unityContainer = InitializationAdditions.UnityContainer();
-
-            //var searcher = unityContainer.Resolve<SearcherSimple>();
-
-            //var unityContainer = InitializationAdditions.UnityContainerMulti();
-            //var searcher = unityContainer.Resolve<SearcherMultithreading>();
-
 
             var searcherStart = unityContainer.Resolve<SearcherStart>();
             searcherStart.SearcherStartInit(unityContainer.Resolve<IStartSearher>());
-
             searcherStart.Initialize(unityContainer);
             searcherStart.DeterminationMinValue();
-
 
             var stop = Stopwatch.StartNew();
 
             searcherStart.Search(path, nesting, searchText).Wait();
+
             stop.Stop();
 
-            Console.WriteLine(stop.ElapsedMilliseconds);
+            Console.WriteLine("Total Run Time: {0}",stop.ElapsedMilliseconds);
 
 //            var buffWatch = unityContainer.Resolve<IBufferCounter>();  
-            //var watchAndCount = unityContainer.Resolve<WatchAndCount>();
+            var watchAndCount = unityContainer.Resolve<WatchAndCount>();
             //var res = buffWatch.GetCount("Buffer.Get", watchAndCount);
 
             //var readWatch = unityContainer.Resolve<IReadCounter>();
             //res = readWatch.ReaderGetCount("Buffer.Get", res);
 
             //Console.WriteLine($"TimeBuffer = {res.GetExecuteTimeBuffer}; CountBuffer = {res.GetExecutingNumberBuffer}; TimeRead = {res.GetExecuteTimeRead}; CountRead = {res.GetExecutingNumberRead};");
+             
 
-
+            Console.WriteLine($"Total Time Read = {watchAndCount.TotalRunTimeRead}; Total Time Search = {watchAndCount.TotalRunTimeSearch}; Sum read of each thread = {ResultTime.queryListRead.Sum()} Sum search of each thread = {ResultTime.queryListSearch.Sum()}");
 
             Console.Read();
 

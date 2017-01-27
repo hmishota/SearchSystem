@@ -10,9 +10,7 @@ namespace SearchTool.Interfaces
         void CompleteAdd();
         void RegisterInterceptor(IBufferInterceptor intrceptor);
         void Add(Data data);
-        Data Get();
+        //Data Get();
         IEnumerable<Data> GetEnumerable();
-
-        //Task WaitAsync();   
     }
 }

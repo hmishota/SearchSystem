@@ -32,11 +32,5 @@ namespace SearchTool
         {
             _iStartSearher.Initialize(unityContainer);
         }
-
-       /* public void UnityContainer()
-        {
-            _iStartSearher.UnityContainer();
-        }*/
-
     }
 }

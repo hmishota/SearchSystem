@@ -12,10 +12,6 @@ using System.Threading.Tasks;
 
 namespace SearchTool
 {
-    public interface IReadCounter
-    {
-        WatchAndCount ReaderGetCount(string key, WatchAndCount watchAndCount);
-    }
 
     //public class ThreadSafeBuffer : IBuffer
     //{
@@ -60,6 +56,9 @@ namespace SearchTool
 
         public int GetExecutingNumberRead;
         public long GetExecuteTimeRead;
+
+        public long TotalRunTimeRead;
+        public long TotalRunTimeSearch;
 
     }
 
@@ -121,8 +120,6 @@ namespace SearchTool
     public class Buffer : IBuffer
     {
         public BlockingCollection<Data> listData = new BlockingCollection<Data>();
-        private SemaphoreSlim ss = new SemaphoreSlim(1);
-
         private IBufferInterceptor _interceptor;
 
         public void RegisterInterceptor(IBufferInterceptor interceptor)
@@ -132,39 +129,35 @@ namespace SearchTool
 
         public void Add(Data data)
         {
-            //ss.Wait();
-
             if (_interceptor != null)
                 _interceptor.Intercept(data);
 
             listData.Add(data);
-
-            // ss.Release();
         }
 
-        public Data Get()
-        {
-            Data data;
-            //if (listData.Count != 0)
-            //{
-            //    ss.Wait();
-            //    Data data = null;
-            //    if (listData.Count != 0)
-            //        data = listData.Dequeue();
-            //    ss.Release();
-            //    return data;
-            //}
-            try
-            {
-                data = listData.Take();
-            }
-            catch (InvalidOperationException)
-            {
-                Console.WriteLine("That's All!");
-                data = null;
-            }
-            return data;
-        }
+        //public Data Get()
+        //{
+        //    Data data;
+        //    //if (listData.Count != 0)
+        //    //{
+        //    //    ss.Wait();
+        //    //    Data data = null;
+        //    //    if (listData.Count != 0)
+        //    //        data = listData.Dequeue();
+        //    //    ss.Release();
+        //    //    return data;
+        //    //}
+        //    try
+        //    {
+        //        data = listData.Take();
+        //    }
+        //    catch (InvalidOperationException)
+        //    {
+        //        Console.WriteLine("That's All!");
+        //        data = null;
+        //    }
+        //    return data;
+        //}
 
         public IEnumerable<Data> GetEnumerable()
         {

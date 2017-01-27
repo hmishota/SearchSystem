@@ -14,6 +14,5 @@ namespace SearchTool.Interfaces
     {
         Task ReadAsync(File file, int sizeBufferReader, int sizeBufferWritter);
         void RegisterReadWithCounts(IUnityContainer unityContainer);
-        //WatchAndCount ReaderGetCount(string key, WatchAndCount watchAndCount);
     }
 }

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -52,7 +53,7 @@ namespace SearchTool
         {
             var token = new CancellationTokenSource();
             var tasks = new List<Task>();
-            
+
             var files = _fileManager.GetFiles(path, nesting);
             var reader = _unityContainer.Resolve<IReaderMulti>();
             reader.RegisterReadWithCounts(_unityContainer);
@@ -61,28 +62,34 @@ namespace SearchTool
             buffer.RegisterInterceptor(new BufferInterceptor(searchText));
 
             var searcher = _unityContainer.Resolve<ISearcherMethodDecorator>();
+
+            var totalRunTimeRead = Stopwatch.StartNew();
+
+            foreach (var file in files)
             {
-                foreach (var file in files)
-                {
-                    tasks.Add(Task.Run(() => reader.ReadAsync(file, SizeBufferReader, SizeBufferWritter)));
-                }
-                
-                var searchTask = Task.Run(() => searcher.SearchAsync(searchText, token.Token));
-                await Task.WhenAll(tasks);
-                buffer.CompleteAdd();
-
-                token.Cancel();
-
-                var result = await searchTask;
-
-                foreach (SearchResult res in result)
-                {
-                    Log.Information($" Result: {res.Position} path: {res.File.Path}");
-                }
+                tasks.Add(Task.Run(() => reader.ReadAsync(file, SizeBufferReader, SizeBufferWritter)));
             }
 
-        }
+            var watchAndCount = _unityContainer.Resolve<WatchAndCount>();
 
+            var searchTask = Task.Run(() => searcher.SearchAsync(searchText, token.Token));
+
+            await Task.WhenAll(tasks);
+
+            totalRunTimeRead.Stop();
+            watchAndCount.TotalRunTimeRead = totalRunTimeRead.ElapsedMilliseconds;
+
+            buffer.CompleteAdd();
+
+            token.Cancel();
+
+            var result = await searchTask;
+
+            foreach (SearchResult res in result)
+            {
+                Log.Information($" Result: {res.Position} path: {res.File.Path}");
+            }
+        }
     }
 }
 

@@ -12,7 +12,6 @@ namespace SearchTool.Interfaces
         Task Search(string path, bool nesting, string searchText);
         void Initialize(IUnityContainer unityContainer);
         void DeterminationMinValue();
-        //void UnityContainer();
         
     }
 }
