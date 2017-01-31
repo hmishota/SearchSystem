@@ -57,19 +57,21 @@ namespace SearchTool
         {
             var buffer = _container.Resolve<IBuffer>();
             var method = _container.Resolve<ISearcherMethod>();
-
+            
             return await Task.Run(() =>
             {
                 List<SearchResult> result = new List<SearchResult>();
-
-                foreach (var data in buffer.GetEnumerable())
+                Data data = new Data();
+                while (data != null)
                 {
-                    result.AddRange(method.Search(data, source));
+                    data = buffer.Dequeue(); 
+                    if (data != null)
+                        result.AddRange(method.Search(data, source));
                 }
+
 
                 return result;
             });
-
         }
 
     }

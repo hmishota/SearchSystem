@@ -5,6 +5,7 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace SearchTool
@@ -15,8 +16,8 @@ namespace SearchTool
         private ISearcherMethod _searcherMethod;
         private IUnityContainer _unityContainer;
        
-        public static int SizeBufferReader = Convert.ToInt16(ConfigurationManager.AppSettings["ReaderBufferSizeReader"]),
-            SizeBufferWritter = Convert.ToInt16(ConfigurationManager.AppSettings["ReaderBufferSizeWritter"]);
+        public static int SizeBufferReader = Convert.ToInt32(ConfigurationManager.AppSettings["ReaderBufferSizeReader"]),
+            SizeBufferWritter = Convert.ToInt32(ConfigurationManager.AppSettings["ReaderBufferSizeWritter"]);
 
         public SearcherSimple(IFileManager fManager, ISearcherMethod searcherMethod, IUnityContainer unityContainer)
         {
@@ -46,7 +47,9 @@ namespace SearchTool
 
         public async Task Search(string path, bool nesting, string searchText)
         {
-            var files = _fileManager.GetFiles(path, nesting);
+         Stopwatch getStopWatch = new Stopwatch();
+
+        var files = _fileManager.GetFiles(path, nesting);
             List<SearchResult> result = new List<SearchResult>();
 
             foreach (var file in files)
@@ -69,7 +72,10 @@ namespace SearchTool
                         }
 
                         // Поиск подстроки в строке
+                        getStopWatch.Start();
                         result.AddRange(_searcherMethod.Search(data, searchText));
+                        getStopWatch.Stop();
+
                         if (prevData == null)
                             prevData = new Data();
 
@@ -77,6 +83,7 @@ namespace SearchTool
                     }
                 }
             }
+            ResultTime.queryListSearch.Enqueue(getStopWatch.ElapsedMilliseconds);
 
             foreach (SearchResult res in result)
             {

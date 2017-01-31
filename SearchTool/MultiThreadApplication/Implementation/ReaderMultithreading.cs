@@ -24,7 +24,11 @@ namespace SearchTool
                 reader.InitVariables(sizeBufferReader, sizeBufferWritter, file);
                 while ((data = await reader.ReadAsync()) != null)
                 {
-                    buffer.Add(data);
+                    await Task.Run(() =>
+                    {
+                        while (!buffer.TryEnqueue(data)) ;
+                        
+                    });
                 }
             }
         }

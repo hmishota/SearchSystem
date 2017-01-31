@@ -1,13 +1,15 @@
 ﻿using SearchTool.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SearchTool.Interfaces
 {
     public interface IBuffer
     {
-        void CompleteAdd();
         void RegisterInterceptor(IBufferInterceptor intrceptor);
-        void Add(Data data);
-        IEnumerable<Data> GetEnumerable();
+
+        void Stop();
+        Data Dequeue();
+        bool TryEnqueue(Data item);
     }
 }

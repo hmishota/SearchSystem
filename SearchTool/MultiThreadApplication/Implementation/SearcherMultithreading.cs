@@ -17,8 +17,8 @@ namespace SearchTool
         private IFileManager _fileManager;
         private ISearcherMethod _searcherMethod;
 
-        public static int SizeBufferReader = Convert.ToInt16(ConfigurationManager.AppSettings["ReaderBufferSizeReader"]),
-            SizeBufferWritter = Convert.ToInt16(ConfigurationManager.AppSettings["ReaderBufferSizeWritter"]);
+        public static int SizeBufferReader = Convert.ToInt32(ConfigurationManager.AppSettings["ReaderBufferSizeReader"]),
+            SizeBufferWritter = Convert.ToInt32(ConfigurationManager.AppSettings["ReaderBufferSizeWritter"]);
 
         public SearcherMultithreading(IFileManager fManager, ISearcherMethod searcherMethod, IUnityContainer unityContainer)
         {
@@ -78,7 +78,7 @@ namespace SearchTool
             totalRunTimeRead.Stop();
             watchAndCount.TotalRunTimeRead = totalRunTimeRead.ElapsedMilliseconds;
 
-            buffer.CompleteAdd();
+            buffer.Stop();
 
             token.Cancel();
 
