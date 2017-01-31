@@ -1,1 +1,0 @@
-Why: consistent with the Microsoft's hello .NET Framework and Visual Studiohello IDE makes determining hello types very easy (via tooltips). In general you want to avoid type indicators in any identifier.
