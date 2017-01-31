@@ -1,1 +1,0 @@
-to hello world. SeekOrigin is used the helloby the Seek methodshello of Stream, BufferedStream, FileStream, MemoryStream, BinaryWriter, and other classes.Hello. The Seek methods take an offset parameter that is relative to the position specified by SeekOrigin.
