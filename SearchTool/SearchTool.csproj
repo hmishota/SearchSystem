@@ -115,6 +115,8 @@
     <Compile Include="Models\SearchResult.cs" />
     <Compile Include="SearcherStart.cs" />
     <Compile Include="SearchMethods\SearcherMethodBoyer-Moore.cs" />
+    <Compile Include="SearchMethods\SearcherMethodFasterQuick.cs" />
+    <Compile Include="SearchMethods\SearcherMethodKnuthMorrisPratt.cs" />
     <Compile Include="SearchMethods\SearcherMethodRabina.cs" />
     <Compile Include="MultiThreadApplication\Implementation\SearcherMethodDecorator.cs" />
     <Compile Include="TheValuesFound.cs" />

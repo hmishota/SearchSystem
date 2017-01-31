@@ -120,6 +120,16 @@ namespace SearchTool
                     unityContainer.RegisterType<ISearcherMethod, SearcherMethodBoyer_Moore>();
                     break;
 
+                case 2:
+                    Console.WriteLine("SearcherMethodKnuth-Morris-Pratt");
+                    unityContainer.RegisterType<ISearcherMethod, SearcherMethodKnuthMorrisPratt>();
+                    break;
+
+                case 3:
+                    Console.WriteLine("SearcherMethodFasterQuick");
+                    unityContainer.RegisterType<ISearcherMethod, SearcherMethodFasterQuick>();
+                    break;
+
                 default:
                     break;
             }

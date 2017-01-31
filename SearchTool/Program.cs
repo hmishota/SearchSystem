@@ -20,9 +20,15 @@ namespace SearchTool
     {
         static void Main(string[] args)
         {
+            //string T = "GCATCGCAGTCAGTATACAGTAC";
+            //string P = "GCAGTCAG";
+            //SearcherMethodFasterQuick search = new SearcherMethodFasterQuick();
+            //List<SearchResult> listresult = search.FasterQuick(new Data { Buffer = T, Position = 0 }, P);
+
+
             var path = string.Empty;
             bool nesting = false;
-            string searchText= string.Empty;
+            string searchText = string.Empty;
 
             InitializationAdditions.Serilog();
             InitializationAdditions.InputVariables(args, ref path, ref nesting, ref searchText);
@@ -40,7 +46,7 @@ namespace SearchTool
 
             stop.Stop();
 
-            Console.WriteLine("Total Run Time: {0}",stop.ElapsedMilliseconds);
+            Console.WriteLine("Total Run Time: {0}", stop.ElapsedMilliseconds);
 
             var watchAndCount = unityContainer.Resolve<WatchAndCount>();
             Console.WriteLine($"Total Time Read = {watchAndCount.TotalRunTimeRead}; Total Time Search = {watchAndCount.TotalRunTimeSearch}; Sum read of each thread = {ResultTime.queryListRead.Sum()} Sum search of each thread = {ResultTime.queryListSearch.Sum()}");
