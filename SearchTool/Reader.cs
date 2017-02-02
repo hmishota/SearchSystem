@@ -110,11 +110,12 @@ namespace SearchTool
 
             dataOut.Path = file.Path;
             dataOut.Position = buffStream.Position;
-            var array = new byte[sizeBufferReader];
+            byte[] array;
             int n;
 
             for (int i = 0; i < numberTimesRead; i++)
             {
+                array = new byte[sizeBufferReader];
                 // Чтение из файла размерностью sizeBufferReader
                 n = await buffStream.ReadAsync(array, 0, sizeBufferReader);
                 if (n == 0)
