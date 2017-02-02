@@ -20,9 +20,16 @@ namespace SearchTool
     {
         static void Main(string[] args)
         {
-            //string T = "GCATCGCAGTCAGTATACAGTAC";
-            //string P = "GCAGTCAG";
-            //SearcherMethodFasterQuick search = new SearcherMethodFasterQuick();
+
+            //string T = "he7472llo112277472";
+            //string P = "7472";
+            //Temp search = new Temp();
+            //List<SearchResult> listresult = search.FasterQuick(new Data { Buffer = T, Position = 0 }, P);
+
+
+            //string T = "GCATCGCAGTC32helGACAGTATACAGTAChelGAC";
+            //string P = "helGAC";
+            //Temp search = new Temp();
             //List<SearchResult> listresult = search.FasterQuick(new Data { Buffer = T, Position = 0 }, P);
 
 

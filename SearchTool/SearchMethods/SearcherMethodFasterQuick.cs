@@ -10,9 +10,11 @@ namespace SearchTool.SearchMethods
 {
     public class SearcherMethodFasterQuick : ISearcherMethod
     {
+        private int _lengthSourceText;
         public List<SearchResult> Search(Data text, string searchText)
         {
-            List<SearchResult> searchResult = new List<SearchResult>();
+            var searchResult = new List<SearchResult>();
+            _lengthSourceText = searchText.Length;
             searchResult = FasterQuick(text, searchText);
             foreach (var search in searchResult)
             {
@@ -22,85 +24,143 @@ namespace SearchTool.SearchMethods
             return searchResult;
         }
 
-
-        public void PreQS(string P, int m, char[] uniqueSymbolsInSearchTexts, out Dictionary<char, int> qsBc)
+     
+        // Строиться таблица смещений по которым будет перемещаться затем алгоритм в процессе поиска 
+        public Dictionary<char, int> GenerateOffsetTable(string sourceText, int lenght, char[] uniqueSymbolsInSearchTexts)
         {
-            int count = uniqueSymbolsInSearchTexts.Count();
-            qsBc = new Dictionary<char, int>(count);
-            int newM = m + 1;
-            for (int i = 0; i < count; i++)
+            var countUniqueSymbols = uniqueSymbolsInSearchTexts.Count();
+            var offsetTable = new Dictionary<char, int>(countUniqueSymbols);
+            
+            // Увеличиваю на единицу чтобы заполнить этим числом изначально таблицу
+            var lenghtSourceTextWithOne = lenght + 1;
+            for (var i = 0; i < countUniqueSymbols; i++)
             {
-                qsBc.Add(uniqueSymbolsInSearchTexts[i], newM);
+                // Заполнение начальными значениями таблицу(словарь)
+                offsetTable.Add(uniqueSymbolsInSearchTexts[i], lenghtSourceTextWithOne);
             }
 
-            for (int i = 0; i < m; i++)
+            for (var i = 0; i < lenght; i++)
             {
-                qsBc[P[i]] = m - i;
+                // Смещения считаются справа налево
+                offsetTable[sourceText[i]] = lenght - i;
             }
+            return offsetTable;
         }
 
-        public int GetPos(string P,int m, char[] uniqueSymbolsInSearchTexts)
+        // Вычисляется максимальная позиция смещения 
+        public int GetMaxPos(string sourceText, char[] uniqueSymbolsInSearchTexts)
         {
-            var ES = 0;
-            var maxES = 0;
+            // Ожидаемый сдвиг
+            var expectedShift = 0;
+            var maxExpectedShift = 0;
             var pos = 0;
-            int count = uniqueSymbolsInSearchTexts.Count();
-            Dictionary<char, int> PrePro = new Dictionary<char, int>(count);
+            var countUniqueSymbols = uniqueSymbolsInSearchTexts.Count();
+            var prePos = new Dictionary<char, int>(countUniqueSymbols);
 
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < countUniqueSymbols; i++)
             {
-                //PrePro.Add(P[i], -1);
-                PrePro[uniqueSymbolsInSearchTexts[i]] = -1;
+                // Заполнение начальными значениями таблицу
+                prePos[uniqueSymbolsInSearchTexts[i]] = -1;
             }
 
-            for (int j = 0; j < m; j++)
+            for (var j = 0; j < _lengthSourceText; j++)
             {
-                ES = ES + count - (j - PrePro[P[j]]);
-                PrePro[P[j]] = j;
-                if (ES >= maxES)
-                {
-                    maxES = ES;
-                    pos = j;
-                }
+                // Вычисление ожидаемого сдвига
+                expectedShift = expectedShift + countUniqueSymbols - (j - prePos[sourceText[j]]);
+                prePos[sourceText[j]] = j;
+
+                if (expectedShift < maxExpectedShift) continue;
+                maxExpectedShift = expectedShift;
+                pos = j;
             }
 
             return pos;
         }
 
-        public List<SearchResult> FasterQuick(Data data, string P)
+        // Вычисление следующей позиции j
+        public int FollowingDisplacement(Dictionary<char, int> next, int j, int pos, string text)
         {
-            List<SearchResult> foundResults = new List<SearchResult>();
+            int value;
+            if (next.TryGetValue(text[j + pos], out value))
+                j = j + value;
+            else
+                j = j + _lengthSourceText;
 
-            string T = data.Buffer;
-            int m = P.Length;
-            int n = T.Length;
-            var uniqueSymbolsInSearchTexts = P.Distinct().ToArray();
+            return j;
+        }
+
+
+        public List<SearchResult> FasterQuick(Data data, string sourceText)
+        {
+            var foundResults = new List<SearchResult>();
+
+            // Исходный текст, в котором будут искать шаблон
+            var text = data.Buffer;
+            var lengthText = text.Length;
+
+            // Заполнение только уникальными символами изшаблона
+            var uniqueSymbolsInSearchTexts = sourceText.Distinct().ToArray();
             Dictionary<char, int> next, shift;
-            var pos = GetPos(P, m, uniqueSymbolsInSearchTexts);
-            PreQS(P, pos, uniqueSymbolsInSearchTexts, out next);
-            PreQS(P, m, uniqueSymbolsInSearchTexts, out shift);
-            int j = 0;
-            while (j <= n - m)
+            var pos = GetMaxPos(sourceText, uniqueSymbolsInSearchTexts);
+
+            // Таблица смещений отн-но найденной pos
+            next = GenerateOffsetTable(sourceText, pos, uniqueSymbolsInSearchTexts);
+
+            // Таблица смещений отн-но всего шаблона sourceText
+            shift = GenerateOffsetTable(sourceText, _lengthSourceText, uniqueSymbolsInSearchTexts);
+            var value = 0;
+            var flag = false;
+            bool compare;
+            var j = 0;
+
+            while (j < lengthText - _lengthSourceText)
             {
-                while (P[pos] != T[j + pos])
+                // Искать когда совпадут символы
+                while (sourceText[pos] != text[j + pos])
                 {
-                    j = j + next[T[j + pos]];
-                    if (j > (n - m))
+                    j = FollowingDisplacement(next, j, pos, text);
+
+                    if (j > (lengthText - _lengthSourceText))
                     {
                         return foundResults;
                     }
                 }
-                int compare = String.Compare(P,T.Substring(j,m));
+                compare = true;
 
-                if(compare==0)
+                // Сравнение строк
+                for (var i = 0; i < sourceText.Length; i++)
                 {
-                    foundResults.Add(new SearchResult { Position = j });
+                    if (sourceText[i] == text[j + i]) continue;
+                    compare = false;
+                    break;
+
                 }
 
-                j = j + shift[T[j + m]];
+                if (compare)
+                {
+                    foundResults.Add(new SearchResult { Position = j });
+                    flag = true;
+                }
+
+                if (j >= lengthText - _lengthSourceText) continue;
+
+                // Если строки совпали, то делать большой шаг
+                if (flag)
+                {
+                    j = FollowingDisplacement(shift, j, _lengthSourceText, text);
+
+                    flag = false;
+                }
+                // Иначе маленький
+                else
+                {
+                    j = FollowingDisplacement(next, j, pos, text);
+
+                }
             }
             return foundResults;
         }
 
     }
 }
+
