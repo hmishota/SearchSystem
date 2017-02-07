@@ -70,6 +70,7 @@
     <Compile Include="MultiThreadApplication\Implementation\BufferTests.cs" />
     <Compile Include="MultiThreadApplication\Implementation\ReaderMultithreadingTest.cs" />
     <Compile Include="MultiThreadApplication\Implementation\SearcherMethodDecoratorTests.cs" />
+    <Compile Include="MultiThreadApplication\Implementation\SearcherMultithreadingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReaderTests.cs" />
     <Compile Include="SearcherSimpleTests.cs" />

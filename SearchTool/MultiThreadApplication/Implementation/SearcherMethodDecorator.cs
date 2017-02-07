@@ -22,7 +22,7 @@ namespace SearchTool
             _container = container;
         }
         
-        public async Task<List<SearchResult>> SearchAsync(string source, CancellationToken cancel)
+        public async Task<List<SearchResult>> SearchAsync(string source)
         {
             var totalRunTimeSearch = Stopwatch.StartNew();
 
@@ -35,7 +35,7 @@ namespace SearchTool
                 {
                     Stopwatch getStopWatch = new Stopwatch();
                     getStopWatch.Start();
-                    var searcher = await SearchInternalAsync(source, cancel);
+                    var searcher = await SearchInternalAsync(source);
                     getStopWatch.Stop();
                     ResultTime.queryListSearch.Enqueue(getStopWatch.ElapsedMilliseconds);
                     return searcher;
@@ -53,7 +53,7 @@ namespace SearchTool
         }
 
         // Поиск source в data
-        private async Task<List<SearchResult>> SearchInternalAsync(string source, CancellationToken cancel)
+        public async Task<List<SearchResult>> SearchInternalAsync(string source)
         {
             var buffer = _container.Resolve<IBuffer>();
             var method = _container.Resolve<ISearcherMethod>();

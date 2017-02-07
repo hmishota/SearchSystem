@@ -71,7 +71,7 @@ namespace SearchTool
             var watchAndCount = _unityContainer.Resolve<WatchAndCount>();
 
             // Запускает поиск
-            var searchTask = Task.Run(() => searcher.SearchAsync(searchText, token.Token));
+            var searchTask = Task.Run(() => searcher.SearchAsync(searchText));
 
             await Task.WhenAll(tasks);
 

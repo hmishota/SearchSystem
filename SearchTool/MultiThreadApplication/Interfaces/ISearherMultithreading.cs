@@ -7,7 +7,7 @@ namespace SearchTool.Interfaces
 {
     public interface ISearcherMethodDecorator
     {
-        Task<List<SearchResult>> SearchAsync(string source, CancellationToken cancel);
+        Task<List<SearchResult>> SearchAsync(string source);
         //Task<List<SearchResult>> SearchInternalAsync(string source, CancellationToken cancel);
     }
 }
