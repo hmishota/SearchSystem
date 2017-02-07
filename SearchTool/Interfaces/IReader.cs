@@ -1,5 +1,6 @@
 ﻿using SearchTool.Models;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace SearchTool.Interfaces
@@ -7,6 +8,6 @@ namespace SearchTool.Interfaces
     public interface IReader : IDisposable
     {
         Task<Models.Data> ReadAsync();
-        void InitVariables(int sizeBufferReader, int sizeBufferWritter, Models.File f);
+        long InitVariables(Stream stream, int sizeBufferReader, int sizeBufferWritter);
     }
 }

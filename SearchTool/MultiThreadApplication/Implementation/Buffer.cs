@@ -11,7 +11,7 @@ namespace SearchTool
     public class Buffer : IBuffer
     {
 
-        public BlockingCollection<Data> listData = new BlockingCollection<Data>();
+        //public BlockingCollection<Data> listData = new BlockingCollection<Data>();
         private IBufferInterceptor _interceptor;
 
         private readonly Queue<Data> _queue = new Queue<Data>();
@@ -33,6 +33,7 @@ namespace SearchTool
             {
                 if (_stopped || _count == _limit)
                     return false;
+                _interceptor?.Intercept(item);
                 _queue.Enqueue(item);
                 _count++;
                 Monitor.Pulse(_queue);

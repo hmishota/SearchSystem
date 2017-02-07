@@ -53,7 +53,7 @@ namespace SearchTool
 
             var files = _fileManager.GetFiles(path, nesting);
             var reader = _unityContainer.Resolve<IReaderMulti>();
-            reader.RegisterReadWithCounts(_unityContainer);
+            reader.RegisterReadWithCounts(_unityContainer, new FileOpen());
 
             var buffer = _unityContainer.Resolve<IBuffer>();
             buffer.RegisterInterceptor(new BufferInterceptor(searchText));

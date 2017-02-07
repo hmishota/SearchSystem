@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace SearchTool
@@ -55,13 +56,16 @@ namespace SearchTool
             foreach (var file in files)
             {
                 Data data;
-
+                FileOpen fileOpen = new FileOpen();
+                Stream stream;
                 Data prevData = null;
                 using (var reader =  _unityContainer.Resolve<IReader>())
                 {
-                    reader.InitVariables(SizeBufferReader, SizeBufferWritter, file);
+                    stream = fileOpen.Open(file);
+                    reader.InitVariables(stream, SizeBufferReader, SizeBufferWritter);
                     while ((data = await reader.ReadAsync()) != null)
                     {
+                        data.Path = file.Path;
                         if (prevData != null)
                         {
                             // Добавление конца текста из предыдущего чтения

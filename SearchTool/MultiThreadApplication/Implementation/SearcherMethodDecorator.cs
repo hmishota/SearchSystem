@@ -53,7 +53,7 @@ namespace SearchTool
         }
 
         // Поиск source в data
-        public async Task<List<SearchResult>> SearchInternalAsync(string source, CancellationToken cancel)
+        private async Task<List<SearchResult>> SearchInternalAsync(string source, CancellationToken cancel)
         {
             var buffer = _container.Resolve<IBuffer>();
             var method = _container.Resolve<ISearcherMethod>();

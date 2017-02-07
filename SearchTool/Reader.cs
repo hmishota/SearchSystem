@@ -20,16 +20,16 @@ namespace SearchTool
             _reader.Dispose();
         }
 
-        public void InitVariables(int sizeBufferReader, int sizeBufferWritter, Models.File f)
+        public long InitVariables(Stream stream, int sizeBufferReader, int sizeBufferWritter)
         {
-            _reader.InitVariables(sizeBufferReader, sizeBufferWritter, f);
+            return _reader.InitVariables(stream, sizeBufferReader, sizeBufferWritter);
         }
 
         public Task<Data> ReadAsync()
         {
             return _reader.ReadAsync();
         }
-      
+
     }
 
     public interface IReadCounter
@@ -49,9 +49,9 @@ namespace SearchTool
             _getStopWatch = new Stopwatch();
         }
 
-        public void InitVariables(int sizeBufferReader, int sizeBufferWritter, Models.File f)
+        public long InitVariables(Stream stream, int sizeBufferReader, int sizeBufferWritter)
         {
-            _reader.InitVariables(sizeBufferReader, sizeBufferWritter, f);
+            return _reader.InitVariables(stream, sizeBufferReader, sizeBufferWritter);
         }
 
         public void ReaderAddTime()
@@ -62,7 +62,7 @@ namespace SearchTool
         public async Task<Data> ReadAsync()
         {
             _getStopWatch.Start();
-            var read= await _reader.ReadAsync();
+            var read = await _reader.ReadAsync();
             _getStopWatch.Stop();
             ReaderAddTime();
             return read;
@@ -76,48 +76,40 @@ namespace SearchTool
 
     public class Reader : IReader
     {
-        private FileStream fileStream;
-        private BufferedStream buffStream;
-        private int sizeBufferReader;
-        private int sizeBufferWritter;
-        private int currentNumberRecordedElements = 0;
-        private int numberTimesRead;
-        private Models.File file;
+        //private FileStream fileStream;
+        private BufferedStream _buffStream;
+        private int _sizeBufferReader;
+        private int _sizeBufferWritter;
+        private int _currentNumberRecordedElements = 0;
+        private int _numberTimesRead;
 
-        public void InitVariables(int sizeBufferReader, int sizeBufferWritter, Models.File f)
+        public long InitVariables(Stream stream, int sizeBufferReader, int sizeBufferWritter)
         {
-            this.sizeBufferReader = sizeBufferReader;
-            this.sizeBufferWritter = sizeBufferWritter;
-            fileStream = new FileStream(f.Path, FileMode.Open);
-            Initialize(fileStream, buffStream);
-            file = new Models.File(f.Path);
-        }
-
-        public void Initialize(Stream fin, BufferedStream buffStream)
-        {
-                this.buffStream = new BufferedStream(fin, sizeBufferReader);
-                currentNumberRecordedElements = 0;
+            _sizeBufferReader = sizeBufferReader;
+            _sizeBufferWritter = sizeBufferWritter;
+            _buffStream = new BufferedStream(stream, sizeBufferReader);
+            _currentNumberRecordedElements = 0;
+            return _buffStream.Position;
         }
 
         public async Task<Models.Data> ReadAsync()
         {
-                var dataOut = new Models.Data();
+            var dataOut = new Models.Data();
             // Проверка на конец файла
-            if (buffStream.Position == buffStream.Length)
+            if (_buffStream.Position == _buffStream.Length)
                 return null;
 
-            numberTimesRead = sizeBufferWritter / sizeBufferReader;
+            _numberTimesRead = _sizeBufferWritter / _sizeBufferReader;
 
-            dataOut.Path = file.Path;
-            dataOut.Position = buffStream.Position;
+            dataOut.Position = _buffStream.Position;
             byte[] array;
             int n;
 
-            for (int i = 0; i < numberTimesRead; i++)
+            for (var i = 0; i < _numberTimesRead; i++)
             {
-                array = new byte[sizeBufferReader];
+                array = new byte[_sizeBufferReader];
                 // Чтение из файла размерностью sizeBufferReader
-                n = await buffStream.ReadAsync(array, 0, sizeBufferReader);
+                n = await _buffStream.ReadAsync(array, 0, _sizeBufferReader);
                 if (n == 0)
                 {
                     return dataOut;
@@ -125,16 +117,16 @@ namespace SearchTool
 
                 // Преобразование массива байтов в строку и удаление последних нулей
                 dataOut.Buffer += System.Text.Encoding.Default.GetString(array).TrimEnd(new char[] { (char)0 });
-                currentNumberRecordedElements = currentNumberRecordedElements + sizeBufferReader;
+                _currentNumberRecordedElements = _currentNumberRecordedElements + _sizeBufferReader;
             }
             return dataOut;
         }
 
         public void Dispose()
         {
-            if (buffStream != null)
+            if (_buffStream != null)
             {
-                buffStream.Dispose();
+                _buffStream.Dispose();
             }
 
         }

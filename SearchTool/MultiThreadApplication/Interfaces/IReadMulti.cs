@@ -13,6 +13,6 @@ namespace SearchTool.Interfaces
     public interface IReaderMulti
     {
         Task ReadAsync(File file, int sizeBufferReader, int sizeBufferWritter);
-        void RegisterReadWithCounts(IUnityContainer unityContainer);
+        void RegisterReadWithCounts(IUnityContainer unityContainer, IFileOpen open);
     }
 }
