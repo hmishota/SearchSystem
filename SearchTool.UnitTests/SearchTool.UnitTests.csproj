@@ -56,6 +56,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -74,13 +75,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReaderTests.cs" />
     <Compile Include="SearcherSimpleTests.cs" />
+    <Compile Include="SearchMethods\SearcherMethodBoyer-MooreTests.cs" />
+    <Compile Include="SearchMethods\SearcherMethodFasterQuickTests.cs" />
+    <Compile Include="SearchMethods\SearcherMethodKnuthMorrisPrattTests.cs" />
+    <Compile Include="SearchMethods\SearcherMethodRabinaTests.cs" />
+    <Compile Include="SearchMethods\SearcherMethodTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MultiThreadApplication\Interfaces\" />
-    <Folder Include="SearchMethods\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SearchTool\SearchTool.csproj">

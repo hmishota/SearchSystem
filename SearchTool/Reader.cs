@@ -76,7 +76,6 @@ namespace SearchTool
 
     public class Reader : IReader
     {
-        //private FileStream fileStream;
         private BufferedStream _buffStream;
         private int _sizeBufferReader;
         private int _sizeBufferWritter;

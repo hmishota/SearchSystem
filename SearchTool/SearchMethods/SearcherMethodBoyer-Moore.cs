@@ -22,7 +22,7 @@ namespace SearchTool.SearchMethods
             return searchResult;
         }
 
-        public void ShiftBM(string x) // Функция - формирование смещений
+        private void ShiftBM(string x) // Функция - формирование смещений
         {
             int j; //Счетчик
             int k = 0; //Счетчик
@@ -48,7 +48,7 @@ namespace SearchTool.SearchMethods
             }
         }
         //Функция поиска алгоритмом БМ
-        public List<SearchResult> BM(Data data, string x)
+        private List<SearchResult> BM(Data data, string x)
         {
             List<SearchResult> foundResults = new List<SearchResult>();
 

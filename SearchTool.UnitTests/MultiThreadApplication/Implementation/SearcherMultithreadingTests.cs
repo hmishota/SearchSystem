@@ -8,27 +8,36 @@ using Moq;
 using SearchTool.Interfaces;
 using Microsoft.Practices.Unity;
 using SearchTool.Models;
+using SearchTool.SearchMethods;
+using System.Configuration;
 
 namespace SearchTool.UnitTests.MultiThreadApplication.Implementation
 {
     public class FakeSearcherMultithreading : IUnityContainer
     {
         private IReaderMulti _reader;
+        private IBuffer _buffer;
+        private ISearcherMethod _searcher;
+        private ISearcherMethodDecorator _SearcherMethodDecorator;
+        private WatchAndCount watch = new WatchAndCount();
+
         public FakeSearcherMultithreading(IEnumerable<Data> datas)
         {
-            var moskReader = new Mock<IReaderMulti>();
-            var s = moskReader.Setup(x => x.ReadAsync(It.IsAny<File>(), It.IsAny<int>(), It.IsAny<int>()));
-            var reader = new Reader();
+            var mockBuffer = new Mock<IBuffer>();
+            _buffer = mockBuffer.Object;
+            var resultDeque = mockBuffer.SetupSequence(x => x.Dequeue());
+            // Буффер при каждом вызове метода buffer.SetupSequence разное значение
             foreach (var data in datas)
             {
-                s = s.Returns(new Task(f));
+                resultDeque = resultDeque.Returns(data);
             }
-            _reader = moskReader.Object;
-        }
 
-        public void f()
-        {
-            
+            _searcher = new SearcherMethodRabina();
+
+            var mockReader = new Mock<IReaderMulti>();
+            _reader = mockReader.Object;
+
+            _SearcherMethodDecorator = new SearcherMethodDecorator(this, 4);
         }
 
         public IUnityContainer Parent
@@ -89,7 +98,15 @@ namespace SearchTool.UnitTests.MultiThreadApplication.Implementation
 
         public object Resolve(Type t, string name, params ResolverOverride[] resolverOverrides)
         {
-            throw new NotImplementedException();
+            if (t.Name == (typeof(IReaderMulti).Name))
+                return _reader;
+            if (t.Name == (typeof(ISearcherMethodDecorator).Name))
+                return _SearcherMethodDecorator;
+            if (t.Name == (typeof(IBuffer).Name))
+                return _buffer;
+            if (t.Name == (typeof(ISearcherMethod).Name))
+                return _searcher;
+            return t.Name == (typeof(WatchAndCount).Name) ? watch : null;
         }
 
         public IEnumerable<object> ResolveAll(Type t, params ResolverOverride[] resolverOverrides)
@@ -109,22 +126,58 @@ namespace SearchTool.UnitTests.MultiThreadApplication.Implementation
         [TestMethod]
         public void Search()
         {
-           
-            string searchText = "hello";
+            var searchText = "hello";
+            var beginData = new List<Data>()
+            {
+                new Data {Buffer = "111", Position = 8, Path = "C:\\MyProject\\SearchSystem\\1232131"},
+                new Data {Buffer = "222", Position = 18, Path = "C:\\MyProject\\SearchSystem\\1232131"},
+                new Data {Buffer = "333", Position = 28, Path = "C:\\MyProject\\SearchSystem\\55555"},
+                new Data {Buffer = "444", Position = 38, Path = "C:\\MyProject\\SearchSystem\\1232131"},
+                new Data {Buffer = "hello", Position = 48, Path = "C:\\MyProject\\SearchSystem\\5556"},
+                new Data {Buffer = "666", Position = 58, Path = "C:\\MyProject\\SearchSystem\\1232131"},
+                new Data {Buffer = "777", Position = 68, Path = "C:\\MyProject\\SearchSystem\\1232131"},
+                new Data {Buffer = "hello", Position = 4, Path = "C:\\MyProject\\SearchSystem\\1232131"}
+            };
+            var expected = new List<SearchResult>()
+            {
+                new SearchResult {Position = 48, File = new File("C:\\MyProject\\SearchSystem\\5556")},
+                new SearchResult {Position = 4, File = new File("C:\\MyProject\\SearchSystem\\1232131")}
+            };
 
             var mockFileManager = new Mock<IFileManager>();
-            List<File> files = new List<File>()
-            {
-                new File("233131"),
-                new File("545454"),
-                new File("7878778"),
-                new File("910910910")
-            };
             var mockSearherMethod = new Mock<ISearcherMethod>();
-            FakeSearcherMultithreading container = new FakeSearcherMultithreading();
+            FakeSearcherMultithreading container = new FakeSearcherMultithreading(beginData);
+            List<File> files = new List<File>();
             mockFileManager.Setup(x => x.GetFiles(It.IsAny<string>(), It.IsAny<bool>())).Returns(files);
             SearcherMultithreading searcher = new SearcherMultithreading(mockFileManager.Object,
                mockSearherMethod.Object, container);
+            var result = searcher.Search(It.IsAny<string>(), It.IsAny<bool>(), searchText);
+            result.Wait();
+
+            bool compareBeginAndEnd = true;
+
+            foreach (var item in result.Result)
+            {
+                for (int i = 0; i < expected.Count; i++)
+                {
+                    if (expected[i].File.Path == item.File.Path &&
+                        expected[i].Position == item.Position)
+                    {
+                        expected.RemoveAt(i);
+                        break;
+                    }
+                    if (i == (expected.Count - 1))
+                    {
+                        compareBeginAndEnd = false;
+                        break;
+                    }
+                }
+                if (compareBeginAndEnd == false)
+                    break;
+            }
+
+            Assert.IsTrue(compareBeginAndEnd,"Не корректно находит слово");
+
         }
 
         [TestMethod]

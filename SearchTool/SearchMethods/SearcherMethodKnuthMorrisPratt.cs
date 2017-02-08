@@ -26,7 +26,7 @@ namespace SearchTool.SearchMethods
 
 
         //Префикс-функция для КМП
-        public int[] PrefFunc(string x)
+        private int[] PrefFunc(string x)
         {
             //Инициализация массива-результата длиной X
             int[] res = new int[x.Length];
@@ -49,7 +49,7 @@ namespace SearchTool.SearchMethods
         }
 
         //Функция поиска алгоритмом КМП
-        public List<SearchResult> KMP(Data data, string x)
+        private List<SearchResult> KMP(Data data, string x)
         {
             List<SearchResult> foundResults = new List<SearchResult>();
 

@@ -4,6 +4,7 @@ using NDesk.Options;
 using SearchTool.Interfaces;
 using SearchTool.Models;
 using SearchTool.SearchMethods;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -49,9 +50,15 @@ namespace SearchTool
 
             var stop = Stopwatch.StartNew();
 
-            searcherStart.Search(path, nesting, searchText).Wait();
+            var result = searcherStart.Search(path, nesting, searchText);
 
             stop.Stop();
+
+            foreach (SearchResult res in result)
+            {
+                Log.Information($" Result: {res.Position} path: {res.File.Path}");
+                //Console.WriteLine($" Result: {res.Position} path: {res.File.Path}");
+            }
 
             Console.WriteLine("Total Run Time: {0}", stop.ElapsedMilliseconds);
 

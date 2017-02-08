@@ -46,7 +46,7 @@ namespace SearchTool
             }
         }
 
-        public async Task Search(string path, bool nesting, string searchText)
+        public async Task<List<SearchResult>> Search(string path, bool nesting, string searchText)
         {
             var token = new CancellationTokenSource();
             var tasks = new List<Task>();
@@ -84,10 +84,7 @@ namespace SearchTool
 
             var result = await searchTask;
 
-            foreach (SearchResult res in result)
-            {
-                Log.Information($" Result: {res.Position} path: {res.File.Path}");
-            }
+            return result;
         }
     }
 }

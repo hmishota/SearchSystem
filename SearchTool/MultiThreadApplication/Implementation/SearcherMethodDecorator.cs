@@ -15,11 +15,12 @@ namespace SearchTool
     public class SearcherMethodDecorator : ISearcherMethodDecorator
     {
         private IUnityContainer _container;
-        private static int SearchThreadsNumber = Convert.ToInt32(ConfigurationManager.AppSettings["CountThreading"]);
+        private int SearchThreadsNumber;
 
-        public SearcherMethodDecorator(IUnityContainer container)
+        public SearcherMethodDecorator(IUnityContainer container,int _searchThreadsNumber)
         {
             _container = container;
+            SearchThreadsNumber = _searchThreadsNumber;
         }
         
         public async Task<List<SearchResult>> SearchAsync(string source)
@@ -53,7 +54,7 @@ namespace SearchTool
         }
 
         // Поиск source в data
-        public async Task<List<SearchResult>> SearchInternalAsync(string source)
+        private async Task<List<SearchResult>> SearchInternalAsync(string source)
         {
             var buffer = _container.Resolve<IBuffer>();
             var method = _container.Resolve<ISearcherMethod>();

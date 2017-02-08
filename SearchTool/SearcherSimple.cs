@@ -46,7 +46,7 @@ namespace SearchTool
             configSetting.SizeBufferWritter = SizeBufferWritter;
         }
 
-        public async Task Search(string path, bool nesting, string searchText)
+        public async Task<List<SearchResult>> Search(string path, bool nesting, string searchText)
         {
          Stopwatch getStopWatch = new Stopwatch();
 
@@ -87,13 +87,10 @@ namespace SearchTool
                     }
                 }
             }
-            ResultTime.queryListSearch.Enqueue(getStopWatch.ElapsedMilliseconds);
 
-            foreach (SearchResult res in result)
-            {
-                Log.Information($" Result: {res.Position} path: {res.File.Path}");
-                //Console.WriteLine($" Result: {res.Position} path: {res.File.Path}");
-            }
+            ResultTime.queryListSearch.Enqueue(getStopWatch.ElapsedMilliseconds);
+            return result;
+           
 
         }
 

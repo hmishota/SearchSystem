@@ -10,8 +10,6 @@ namespace SearchTool
 
     public class Buffer : IBuffer
     {
-
-        //public BlockingCollection<Data> listData = new BlockingCollection<Data>();
         private IBufferInterceptor _interceptor;
 
         private readonly Queue<Data> _queue = new Queue<Data>();
@@ -24,8 +22,10 @@ namespace SearchTool
             _interceptor = interceptor;
         }
 
+        // Добавить элемент в очередь
         public bool TryEnqueue(Data item)
         {
+            // Если добавление в очередь больше не будет и кол-во ==_limit
             if (_stopped || _count == _limit)
                 return false;
 
@@ -33,6 +33,7 @@ namespace SearchTool
             {
                 if (_stopped || _count == _limit)
                     return false;
+                // Если не null, добавить к буфферу часть предыдущего слова
                 _interceptor?.Intercept(item);
                 _queue.Enqueue(item);
                 _count++;
@@ -41,14 +42,17 @@ namespace SearchTool
             return true;
         }
 
+        // Извлечь элемент из очереди
         public Data Dequeue()
         {
+            // Если добавление в очередь больше не будет и кол-во == 0 
             if (_stopped && _count == 0)
                 return default(Data);
             lock (_queue)
             {
                 if (_stopped && _count == 0)
                     return default(Data);
+                // Подождать пока кол-во элементов станет !=0
                 while (_count == 0)
                 {
                     Monitor.Wait(_queue);
@@ -60,6 +64,7 @@ namespace SearchTool
             }
         }
 
+        // Сообщить, что больше не будет добавления в очередь
         public void Stop()
         {
             if (_stopped)

@@ -1,6 +1,8 @@
 ﻿using Microsoft.Practices.Unity;
 using SearchTool.Interfaces;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using SearchTool.Models;
 
 namespace SearchTool
 {
@@ -13,9 +15,9 @@ namespace SearchTool
             _iStartSearher = IStartSearher;
         }
 
-        public Task Search(string path, bool nesting, string searchText)
+        public List<SearchResult> Search(string path, bool nesting, string searchText)
         {
-            return _iStartSearher.Search(path, nesting, searchText);
+            return _iStartSearher.Search(path, nesting, searchText).Result;
         }
 
         public void DeterminationMinValue()

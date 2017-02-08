@@ -24,9 +24,9 @@ namespace SearchTool.SearchMethods
             return searchResult;
         }
 
-     
+
         // Строиться таблица смещений по которым будет перемещаться затем алгоритм в процессе поиска 
-        public Dictionary<char, int> GenerateOffsetTable(string sourceText, int lenght, char[] uniqueSymbolsInSearchTexts)
+        private Dictionary<char, int> GenerateOffsetTable(string sourceText, int lenght, char[] uniqueSymbolsInSearchTexts)
         {
             var countUniqueSymbols = uniqueSymbolsInSearchTexts.Count();
             var offsetTable = new Dictionary<char, int>(countUniqueSymbols);
@@ -48,7 +48,7 @@ namespace SearchTool.SearchMethods
         }
 
         // Вычисляется максимальная позиция смещения 
-        public int GetMaxPos(string sourceText, char[] uniqueSymbolsInSearchTexts)
+        private int GetMaxPos(string sourceText, char[] uniqueSymbolsInSearchTexts)
         {
             // Ожидаемый сдвиг
             var expectedShift = 0;
@@ -78,7 +78,7 @@ namespace SearchTool.SearchMethods
         }
 
         // Вычисление следующей позиции j
-        public int FollowingDisplacement(Dictionary<char, int> next, int j, int pos, string text)
+        private int FollowingDisplacement(Dictionary<char, int> next, int j, int pos, string text)
         {
             int value;
             if (next.TryGetValue(text[j + pos], out value))
@@ -90,7 +90,7 @@ namespace SearchTool.SearchMethods
         }
 
 
-        public List<SearchResult> FasterQuick(Data data, string sourceText)
+        private List<SearchResult> FasterQuick(Data data, string sourceText)
         {
             var foundResults = new List<SearchResult>();
 

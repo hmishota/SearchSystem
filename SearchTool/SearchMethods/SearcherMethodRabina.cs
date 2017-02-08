@@ -20,7 +20,7 @@ namespace SearchTool.SearchMethods
         }
 
         // Хеш-функция для алгоритма Рабина-Карпа
-        public int Hash(string x)
+        private int Hash(string x)
         {
             int p = 31;
             int rez = 0;
@@ -31,7 +31,7 @@ namespace SearchTool.SearchMethods
             return rez;
         }
         // Функция поиска алгоритмом Рабина-Карпа
-        public List<SearchResult> Rabina(Data data, string searchText)
+        private List<SearchResult> Rabina(Data data, string searchText)
         {
             List<SearchResult> foundResults = new List<SearchResult>();
             string buffer = data.Buffer;

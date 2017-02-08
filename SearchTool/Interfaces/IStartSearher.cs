@@ -1,4 +1,5 @@
 ﻿using Microsoft.Practices.Unity;
+using SearchTool.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace SearchTool.Interfaces
 {
     public interface IStartSearher
     {
-        Task Search(string path, bool nesting, string searchText);
+        Task<List<SearchResult>> Search(string path, bool nesting, string searchText);
         void Initialize(IUnityContainer unityContainer);
         void DeterminationMinValue();
         

@@ -139,11 +139,12 @@ namespace SearchTool
 
         }
         
-        public static IUnityContainer UnityContainerMulti(IUnityContainer unityContainer)
+        private static IUnityContainer UnityContainerMulti(IUnityContainer unityContainer)
         {
+            int SearchThreadsNumber = Convert.ToInt32(ConfigurationManager.AppSettings["CountThreading"]);
             unityContainer.RegisterType<IReaderMulti, ReaderMultithreading>(new ContainerControlledLifetimeManager());
             unityContainer.RegisterType<IBuffer, Buffer>(new ContainerControlledLifetimeManager());
-            unityContainer.RegisterType<ISearcherMethodDecorator, SearcherMethodDecorator>();
+            unityContainer.RegisterType<ISearcherMethodDecorator, SearcherMethodDecorator>(new InjectionConstructor(unityContainer, SearchThreadsNumber));
 
             return unityContainer;
         }
