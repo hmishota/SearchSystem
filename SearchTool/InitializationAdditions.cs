@@ -78,6 +78,9 @@ namespace SearchTool
 
         public static IUnityContainer UnityContainer()
         {
+            int sizeBufferReader = Convert.ToInt32(ConfigurationManager.AppSettings["ReaderBufferSizeReader"]),
+           sizeBufferWritter = Convert.ToInt32(ConfigurationManager.AppSettings["ReaderBufferSizeWritter"]);
+
             var unityContainer = new UnityContainer();
             unityContainer.RegisterType<IFileManager, FileManager>();
 
@@ -88,25 +91,7 @@ namespace SearchTool
 
             unityContainer.RegisterInstance(new SearcherStart());
             unityContainer.RegisterInstance(new WatchAndCount());
-            int thread = Convert.ToInt32(ConfigurationManager.AppSettings["SearcherThreading"]);
-            switch (thread)
-            {
-                case 0:
-                    Console.WriteLine("Single Threading");
-                    unityContainer.RegisterType<IStartSearher, SearcherSimple>();
-
-                    break;
-
-                case 1:
-                    Console.WriteLine("Multi Threading");
-                    unityContainer.RegisterType<IStartSearher, SearcherMultithreading>();
-                    UnityContainerMulti(unityContainer);
-                    break;
-
-                default:
-                    break;
-            }
-
+           
             int method = Convert.ToInt32(ConfigurationManager.AppSettings["SearcherMethod"]);
             switch (method)
             {
@@ -128,6 +113,28 @@ namespace SearchTool
                 case 3:
                     Console.WriteLine("SearcherMethodFasterQuick");
                     unityContainer.RegisterType<ISearcherMethod, SearcherMethodFasterQuick>();
+                    break;
+
+                default:
+                    break;
+            }
+
+            int thread = Convert.ToInt32(ConfigurationManager.AppSettings["SearcherThreading"]);
+            switch (thread)
+            {
+                case 0:
+                    Console.WriteLine("Single Threading");
+                    unityContainer.RegisterType<IStartSearher, SearcherSimple>(); //TODO Add parametrs
+
+                    break;
+
+                case 1:
+                    Console.WriteLine("Multi Threading");
+                    var fileManager = unityContainer.Resolve<IFileManager>();
+                    var searcherMethod = unityContainer.Resolve<ISearcherMethod>(); ;
+
+                    unityContainer.RegisterType<IStartSearher, SearcherMultithreading>(new InjectionConstructor(fileManager, searcherMethod, unityContainer, sizeBufferReader, sizeBufferWritter));
+                    UnityContainerMulti(unityContainer);
                     break;
 
                 default:

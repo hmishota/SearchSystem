@@ -1,10 +1,13 @@
-﻿namespace SearchTool.Models
+﻿using System;
+using System.Collections;
+
+namespace SearchTool.Models
 {
     public class SearchResult
     {
         public long Position;
         public File File;
-
+        
         public override bool Equals(object obj)
         {
             if (obj == null)

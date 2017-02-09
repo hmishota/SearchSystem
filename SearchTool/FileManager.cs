@@ -12,10 +12,7 @@ namespace SearchTool
         {
             string[] arrayPath;
 
-            if (nesting == true)
-                arrayPath = IO.Directory.GetFiles(path, "*.*", IO.SearchOption.AllDirectories);
-            else
-                arrayPath = IO.Directory.GetFiles(path, "*.*", IO.SearchOption.TopDirectoryOnly);
+            arrayPath = IO.Directory.GetFiles(path, "*.*", nesting == true ? IO.SearchOption.AllDirectories : IO.SearchOption.TopDirectoryOnly);
 
             List<File> list = new List<File>();
             foreach (var p in arrayPath)

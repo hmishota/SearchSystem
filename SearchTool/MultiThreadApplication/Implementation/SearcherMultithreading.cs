@@ -17,32 +17,33 @@ namespace SearchTool
         private IFileManager _fileManager;
         private ISearcherMethod _searcherMethod;
 
-        public static int SizeBufferReader = Convert.ToInt32(ConfigurationManager.AppSettings["ReaderBufferSizeReader"]),
-            SizeBufferWritter = Convert.ToInt32(ConfigurationManager.AppSettings["ReaderBufferSizeWritter"]);
+        public int _sizeBufferReader, _sizeBufferWritter;
 
-        public SearcherMultithreading(IFileManager fManager, ISearcherMethod searcherMethod, IUnityContainer unityContainer)
+        public SearcherMultithreading(IFileManager fManager, ISearcherMethod searcherMethod, IUnityContainer unityContainer, int sizeBufferReader, int sizeBufferWritter)
         {
             _fileManager = fManager;
             _searcherMethod = searcherMethod;
             _unityContainer = unityContainer;
+            _sizeBufferReader = sizeBufferReader;
+            _sizeBufferWritter = sizeBufferWritter;
         }
 
         public void Initialize(IUnityContainer unityContainer)
         {
             var configSetting = unityContainer.Resolve<ConfigSettings>();
 
-            configSetting.SizeBufferReader = SizeBufferReader;
-            configSetting.SizeBufferWritter = SizeBufferWritter;
+            configSetting.SizeBufferReader = _sizeBufferReader;
+            configSetting.SizeBufferWritter = _sizeBufferWritter;
         }
 
         public void DeterminationMinValue()
         {
-            if (SizeBufferReader > SizeBufferWritter)
+            if (_sizeBufferReader > _sizeBufferWritter)
             {
-                int buff = SizeBufferWritter;
-                SizeBufferWritter = SizeBufferReader;
+                int buff = _sizeBufferWritter;
+                _sizeBufferWritter = _sizeBufferReader;
 
-                SizeBufferReader = buff;
+                _sizeBufferReader = buff;
             }
         }
 
@@ -65,7 +66,7 @@ namespace SearchTool
             foreach (var file in files)
             {
                 // Запускает чтение файла в отдельном потоке
-                tasks.Add(Task.Run(() => reader.ReadAsync(file, SizeBufferReader, SizeBufferWritter)));
+                tasks.Add(Task.Run(() => reader.ReadAsync(file, _sizeBufferReader, _sizeBufferWritter)));
             }
 
             var watchAndCount = _unityContainer.Resolve<WatchAndCount>();

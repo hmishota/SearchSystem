@@ -17,6 +17,11 @@ namespace SearchTool
         private IUnityContainer _container;
         private int SearchThreadsNumber;
 
+
+        public static int kol_voVisov = 0;//УДАЛИТЬ ПОТОМ
+
+
+
         public SearcherMethodDecorator(IUnityContainer container,int _searchThreadsNumber)
         {
             _container = container;
@@ -65,6 +70,7 @@ namespace SearchTool
                 Data data = new Data();
                 while (data != null)
                 {
+                    Interlocked.Increment(ref kol_voVisov);
                     data = buffer.Dequeue(); 
                     if (data != null)
                         result.AddRange(method.Search(data, source));

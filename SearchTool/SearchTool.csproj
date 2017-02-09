@@ -91,6 +91,7 @@
     <Compile Include="AllSymbols.cs" />
     <Compile Include="FileOpen.cs" />
     <Compile Include="Interfaces\IStartSearher.cs" />
+    <Compile Include="Models\ComparerSearchResult.cs" />
     <Compile Include="Models\ResultTime.cs" />
     <Compile Include="Models\WatchAndCount.cs" />
     <Compile Include="MultiThreadApplication\Implementation\Buffer.cs" />
