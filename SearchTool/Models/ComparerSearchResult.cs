@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace SearchTool.Models
 {
@@ -12,9 +7,6 @@ namespace SearchTool.Models
         public int Compare(SearchResult x, SearchResult y)
         {
             return x.Position.CompareTo(y.Position);
-
         }
-
-       
     }
 }

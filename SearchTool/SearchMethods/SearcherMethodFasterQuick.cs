@@ -1,10 +1,7 @@
 ﻿using SearchTool.Interfaces;
 using SearchTool.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SearchTool.SearchMethods
 {
@@ -78,15 +75,19 @@ namespace SearchTool.SearchMethods
         }
 
         // Вычисление следующей позиции j
-        private int FollowingDisplacement(Dictionary<char, int> next, int j, int pos, string text)
+        private int FollowingDisplacement(Dictionary<char, int> next, int j, int pos, string text, bool stepsmall)
         {
             int value;
+
             if (next.TryGetValue(text[j + pos], out value))
                 j = j + value;
-            else
+            else if (stepsmall)
+                j = j + pos;
+                else
                 j = j + _lengthSourceText;
 
             return j;
+
         }
 
 
@@ -118,7 +119,7 @@ namespace SearchTool.SearchMethods
                 // Искать когда совпадут символы
                 while (sourceText[pos] != text[j + pos])
                 {
-                    j = FollowingDisplacement(next, j, pos, text);
+                    j = FollowingDisplacement(next, j, pos, text, true);
 
                     if (j > (lengthText - _lengthSourceText))
                     {
@@ -147,14 +148,14 @@ namespace SearchTool.SearchMethods
                 // Если строки совпали, то делать большой шаг
                 if (flag)
                 {
-                    j = FollowingDisplacement(shift, j, _lengthSourceText, text);
+                    j = FollowingDisplacement(shift, j, _lengthSourceText, text, false);
 
                     flag = false;
                 }
                 // Иначе маленький
                 else
                 {
-                    j = FollowingDisplacement(next, j, pos, text);
+                    j = FollowingDisplacement(next, j, pos, text,true);
 
                 }
             }

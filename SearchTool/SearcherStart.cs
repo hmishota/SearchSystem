@@ -24,10 +24,6 @@ namespace SearchTool
         {
             _iStartSearher.DeterminationMinValue();
         }
-
-        public void Initialize(IUnityContainer unityContainer)
-        {
-            _iStartSearher.Initialize(unityContainer);
-        }
+        
     }
 }

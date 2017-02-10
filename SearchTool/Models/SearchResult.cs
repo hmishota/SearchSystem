@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-
-namespace SearchTool.Models
+﻿namespace SearchTool.Models
 {
     public class SearchResult
     {

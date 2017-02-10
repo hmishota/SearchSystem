@@ -88,10 +88,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AllSymbols.cs" />
     <Compile Include="FileOpen.cs" />
     <Compile Include="Interfaces\IStartSearher.cs" />
     <Compile Include="Models\ComparerSearchResult.cs" />
+    <Compile Include="Models\PrintFindFile.cs" />
     <Compile Include="Models\ResultTime.cs" />
     <Compile Include="Models\WatchAndCount.cs" />
     <Compile Include="MultiThreadApplication\Implementation\Buffer.cs" />
@@ -108,7 +108,6 @@
     <Compile Include="Interfaces\IFileManager.cs" />
     <Compile Include="Interfaces\IReader.cs" />
     <Compile Include="Interfaces\ISearcherMethod.cs" />
-    <Compile Include="Example.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reader.cs" />

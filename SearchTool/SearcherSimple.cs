@@ -51,6 +51,7 @@ namespace SearchTool
          Stopwatch getStopWatch = new Stopwatch();
 
         var files = _fileManager.GetFiles(path, nesting);
+            PrintFindFile.Print(files);
             List<SearchResult> result = new List<SearchResult>();
 
             foreach (var file in files)

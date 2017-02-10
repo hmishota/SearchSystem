@@ -21,19 +21,6 @@ namespace SearchTool
     {
         static void Main(string[] args)
         {
-
-            //string T = "he7472llo112277472";
-            //string P = "7472";
-            //Temp search = new Temp();
-            //List<SearchResult> listresult = search.FasterQuick(new Data { Buffer = T, Position = 0 }, P);
-
-
-            //string T = "GCATCGCAGTC32helGACAGTATACAGTAChelGAC";
-            //string P = "helGAC";
-            //Temp search = new Temp();
-            //List<SearchResult> listresult = search.FasterQuick(new Data { Buffer = T, Position = 0 }, P);
-
-
             var path = string.Empty;
             bool nesting = false;
             string searchText = string.Empty;
@@ -45,7 +32,6 @@ namespace SearchTool
 
             var searcherStart = unityContainer.Resolve<SearcherStart>();
             searcherStart.SearcherStartInit(unityContainer.Resolve<IStartSearher>());
-            searcherStart.Initialize(unityContainer);
             searcherStart.DeterminationMinValue();
 
             var stop = Stopwatch.StartNew();

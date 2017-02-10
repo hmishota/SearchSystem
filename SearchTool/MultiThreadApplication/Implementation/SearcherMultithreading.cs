@@ -1,10 +1,7 @@
 ﻿using Microsoft.Practices.Unity;
 using SearchTool.Interfaces;
 using SearchTool.Models;
-using Serilog;
-using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,27 +12,17 @@ namespace SearchTool
     {
         private IUnityContainer _unityContainer;
         private IFileManager _fileManager;
-        private ISearcherMethod _searcherMethod;
 
         public int _sizeBufferReader, _sizeBufferWritter;
 
-        public SearcherMultithreading(IFileManager fManager, ISearcherMethod searcherMethod, IUnityContainer unityContainer, int sizeBufferReader, int sizeBufferWritter)
+        public SearcherMultithreading(IFileManager fManager, IUnityContainer unityContainer, int sizeBufferReader, int sizeBufferWritter)
         {
             _fileManager = fManager;
-            _searcherMethod = searcherMethod;
             _unityContainer = unityContainer;
             _sizeBufferReader = sizeBufferReader;
             _sizeBufferWritter = sizeBufferWritter;
         }
-
-        public void Initialize(IUnityContainer unityContainer)
-        {
-            var configSetting = unityContainer.Resolve<ConfigSettings>();
-
-            configSetting.SizeBufferReader = _sizeBufferReader;
-            configSetting.SizeBufferWritter = _sizeBufferWritter;
-        }
-
+        
         public void DeterminationMinValue()
         {
             if (_sizeBufferReader > _sizeBufferWritter)
@@ -53,6 +40,7 @@ namespace SearchTool
             var tasks = new List<Task>();
 
             var files = _fileManager.GetFiles(path, nesting);
+            PrintFindFile.Print(files);
             var reader = _unityContainer.Resolve<IReaderMulti>();
             reader.RegisterReadWithCounts(_unityContainer, new FileOpen());
 

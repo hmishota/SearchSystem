@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SearchTool.Models;
@@ -82,7 +79,7 @@ namespace SearchTool.UnitTests.MultiThreadApplication.Implementation
                 tasksDequeue.Add(Task.Run(() => buffer.Dequeue()));
             }
             await Task.WhenAll(tasksTryEnqueue);
-            var resultDequeue = await Task.WhenAll(tasksDequeue);
+            await Task.WhenAll(tasksDequeue);
             bool logic = true;
             foreach (var item in tasksDequeue)
             {

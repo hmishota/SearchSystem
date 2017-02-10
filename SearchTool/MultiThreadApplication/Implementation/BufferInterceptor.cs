@@ -24,7 +24,7 @@ namespace SearchTool
                 var prevData = storage[data.Path];
                 string str;
 
-                // Если длина слова меньше размера буфера
+                // Если длина искомого слова меньше размера буфера
                 if (_searchTextLength < prevData.Buffer.Length)
                 {
                     str = prevData.Buffer.Substring(prevData.Buffer.Length - (_searchTextLength - 1));
