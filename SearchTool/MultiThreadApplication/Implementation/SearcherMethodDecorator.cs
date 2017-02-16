@@ -1,4 +1,5 @@
-﻿using SearchTool.Interfaces;
+﻿using System;
+using SearchTool.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Practices.Unity;
@@ -11,12 +12,13 @@ namespace SearchTool
     public class SearcherMethodDecorator : ISearcherMethodDecorator
     {
         private IUnityContainer _container;
-        private int SearchThreadsNumber;
+        private int _searchThreadsNumber;
 
-        public SearcherMethodDecorator(IUnityContainer container,int _searchThreadsNumber)
+        public SearcherMethodDecorator(IUnityContainer container,int searchThreadsNumber)
         {
             _container = container;
-            SearchThreadsNumber = _searchThreadsNumber;
+            //_searchThreadsNumber = searchThreadsNumber;
+            _searchThreadsNumber = Environment.ProcessorCount;
         }
         
         public async Task<List<SearchResult>> SearchAsync(string source)
@@ -25,7 +27,7 @@ namespace SearchTool
 
             var tasks = new List<Task<List<SearchResult>>>();
 
-            for (int i = 0; i < SearchThreadsNumber; i++)
+            for (int i = 0; i < _searchThreadsNumber; i++)
             {
                 // Запускает поиск в отдельном потоке
                 tasks.Add(Task.Run(() =>

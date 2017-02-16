@@ -81,6 +81,8 @@ namespace SearchTool
             int sizeBufferReader = Convert.ToInt32(ConfigurationManager.AppSettings["ReaderBufferSizeReader"]),
            sizeBufferWritter = Convert.ToInt32(ConfigurationManager.AppSettings["ReaderBufferSizeWritter"]);
 
+            var limit = Convert.ToInt32(ConfigurationManager.AppSettings["Limit"]);
+
             var unityContainer = new UnityContainer();
             unityContainer.RegisterType<IFileManager, FileManager>();
 
@@ -113,6 +115,21 @@ namespace SearchTool
                 case 3:
                     Console.WriteLine("SearcherMethodFasterQuick");
                     unityContainer.RegisterType<ISearcherMethod, SearcherMethodFasterQuick>();
+                    break;
+
+                case 4:
+                    Console.WriteLine($"OddSearch. Can have {limit} errors");
+                    unityContainer.RegisterType<ISearcherMethod, FuzzySearch>(new InjectionConstructor(limit));
+                    break;
+
+                case 5:
+                    Console.WriteLine($"OddSearch. Can have {limit} errors");
+                    unityContainer.RegisterType<ISearcherMethod, FuzzySearchForEachSymbol>(new InjectionConstructor(limit));
+                    break;
+
+                case 6:
+                    Console.WriteLine($"QuickWithFuzzy. Can have {limit} errors");
+                    unityContainer.RegisterType<ISearcherMethod, QuickWithFuzzy>(new InjectionConstructor(limit));
                     break;
 
                 default:

@@ -80,6 +80,7 @@
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -108,6 +109,7 @@
     <Compile Include="Interfaces\IFileManager.cs" />
     <Compile Include="Interfaces\IReader.cs" />
     <Compile Include="Interfaces\ISearcherMethod.cs" />
+    <Compile Include="SearchMethods\FuzzySearch.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reader.cs" />
@@ -116,12 +118,15 @@
     <Compile Include="SearcherSimple.cs" />
     <Compile Include="Models\SearchResult.cs" />
     <Compile Include="SearcherStart.cs" />
+    <Compile Include="SearchMethods\FuzzySearchForEachSymbol.cs" />
+    <Compile Include="SearchMethods\QuickWithFuzzy.cs" />
     <Compile Include="SearchMethods\SearcherMethodBoyer-Moore.cs" />
     <Compile Include="SearchMethods\SearcherMethodKnuthMorrisPratt.cs" />
     <Compile Include="SearchMethods\SearcherMethodRabina.cs" />
     <Compile Include="MultiThreadApplication\Implementation\SearcherMethodDecorator.cs" />
     <Compile Include="SearchMethods\SearcherMethodFasterQuick.cs" />
     <Compile Include="TheValuesFound.cs" />
+    <Compile Include="Tokenizer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
