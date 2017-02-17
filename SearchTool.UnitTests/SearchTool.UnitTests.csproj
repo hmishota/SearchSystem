@@ -85,6 +85,8 @@
     <Compile Include="MultiThreadApplication\Implementation\SearcherMultithreadingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReaderTests.cs" />
+    <Compile Include="SearchMethods\FuzzySearchForEachSymbolTests.cs" />
+    <Compile Include="SearchMethods\FuzzySearchTests.cs" />
     <Compile Include="SearchMethods\SearcherMethodBoyer-MooreTests.cs" />
     <Compile Include="SearchMethods\SearcherMethodFasterQuickTests.cs" />
     <Compile Include="SearchMethods\SearcherMethodKnuthMorrisPrattTests.cs" />

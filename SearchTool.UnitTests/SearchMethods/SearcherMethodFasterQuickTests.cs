@@ -45,7 +45,7 @@ namespace SearchTool.UnitTests.SearchMethods
             var result = searcherMethod.Search_WordInEndSentence();
             Assert.IsTrue(result, "Не находит несколько слов в буфере. Метод FasterQuick");
         }
-
+        
         private SearcherMethodTests MakeSearcherMethodTests()
         {
             return new SearcherMethodTests(new SearcherMethodFasterQuick());

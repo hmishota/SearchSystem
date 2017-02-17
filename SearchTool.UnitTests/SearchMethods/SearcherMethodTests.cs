@@ -91,6 +91,45 @@ namespace SearchTool.UnitTests.SearchMethods
             return expectedData.SequenceEqual(result);
         }
 
+        public bool FuzzySearch_LimitOneSymbol()
+        {
+            Data begindata = new Data
+            {
+                Buffer = "he 3sdsfhosdfefhello hello",
+                Path = "C:\\MyProject\\SearchSystem\\1232131",
+                Position = 0
+            };
+            List<SearchResult> expectedData = new List<SearchResult>
+            {
+                new SearchResult {Position = 21, File = new File("C:\\MyProject\\SearchSystem\\1232131")}
+            };
+
+            var source = "Hello";
+            var result = _searcher.Search(begindata, source);
+            return expectedData.SequenceEqual(result);
+        }
+
+        public bool FuzzySearchForEachSymbol_LimitOneSymbol()
+        {
+            Data begindata = new Data
+            {
+                Buffer = "he 3sdsfhosdfefhello hello",
+                Path = "C:\\MyProject\\SearchSystem\\1232131",
+                Position = 0
+            };
+
+            List<SearchResult> expectedData = new List<SearchResult>
+            {
+                new SearchResult {Position = 15, File = new File("C:\\MyProject\\SearchSystem\\1232131")},
+                new SearchResult {Position = 21, File = new File("C:\\MyProject\\SearchSystem\\1232131")}
+
+            };
+
+            var source = "Hello";
+            var result = _searcher.Search(begindata, source);
+            return expectedData.SequenceEqual(result);
+        }
+
         public int Search_NoSerchWordInSentence()
         {
             Data begindata = new Data

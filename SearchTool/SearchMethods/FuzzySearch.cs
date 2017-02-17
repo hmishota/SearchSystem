@@ -37,7 +37,7 @@ namespace SearchTool
             return listResults;
         }
 
-        private int CompareTwoWords(string dataBuffer, string searchText) 
+        public int CompareTwoWords(string dataBuffer, string searchText) 
         {
             if (dataBuffer.Length == 1 || dataBuffer.Length == 0)
             {
@@ -58,21 +58,19 @@ namespace SearchTool
             var diff2 = LevenshteinDistanceReverse(searchTextPart2, searchText);
 
             return MinCountChanges(diff1, diff2);
-
-            //return diffRes <= _limit;
         }
 
-        private int MinCountChanges(int[] DistanceSearchTextPart1, int[] DistanceSearchTextPart2)
+        public int MinCountChanges(int[] distanceSearchTextPart1, int[] distanceSearchTextPart2)
         {
-            int[] sumDistance = new int[DistanceSearchTextPart1.Length];
-            for (int i = 0; i < DistanceSearchTextPart1.Length; i++)
+            int[] sumDistance = new int[distanceSearchTextPart1.Length];
+            for (int i = 0; i < distanceSearchTextPart1.Length; i++)
             {
-                sumDistance[i] = DistanceSearchTextPart1[i] + DistanceSearchTextPart2[i];
+                sumDistance[i] = distanceSearchTextPart1[i] + distanceSearchTextPart2[i];
             }
             return sumDistance.Min();
         }
 
-        private int[] LevenshteinDistance(string dataBufferPart1, string searchText)
+        public int[] LevenshteinDistance(string dataBufferPart1, string searchText)
         {
             if (dataBufferPart1 == null) throw new ArgumentNullException("string1");
             if (searchText == null) throw new ArgumentNullException("string2");
@@ -109,7 +107,7 @@ namespace SearchTool
             return result;
         }
 
-        private int[] LevenshteinDistanceReverse(string dataBufferPart2, string string2)
+        public int[] LevenshteinDistanceReverse(string dataBufferPart2, string string2)
         {
             if (dataBufferPart2 == null) throw new ArgumentNullException("string1");
             if (string2 == null) throw new ArgumentNullException("string2");

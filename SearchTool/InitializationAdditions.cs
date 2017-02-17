@@ -123,7 +123,7 @@ namespace SearchTool
                     break;
 
                 case 5:
-                    Console.WriteLine($"OddSearch. Can have {limit} errors");
+                    Console.WriteLine($"FuzzySearch. Can have {limit} errors");
                     unityContainer.RegisterType<ISearcherMethod, FuzzySearchForEachSymbol>(new InjectionConstructor(limit));
                     break;
 
