@@ -1,10 +1,12 @@
-﻿using SearchTool.Models;
-using System;
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace SearchTool.Interfaces
 {
-    interface IReader : IDisposable
+    public interface IReader : IDisposable
     {
-        bool Read(out Data data);
+        Task<Models.Data> ReadAsync();
+        long InitVariables(Stream stream, int sizeBufferReader, int sizeBufferWritter);
     }
 }

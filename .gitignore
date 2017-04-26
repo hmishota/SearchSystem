@@ -240,3 +240,10 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+
+#ignore AllFiles 
+AllFiles/
+TestFile/
+ForTempField/
+/1232131
+/New folder

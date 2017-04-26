@@ -5,7 +5,7 @@ namespace SearchTool.Interfaces
 {
     public interface IFileManager
     {
-        IEnumerable<File> GetFiles(string path, bool nesting);
+        List<File> GetFiles(string path, bool nesting);
     }
     
 }
